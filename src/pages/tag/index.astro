@@ -1,6 +1,6 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-const allPosts = await Astro.glob('../posts/*.md')
+import BaseLayout from "@layout/BaseLayout.astro";
+const allPosts = await Astro.glob('../post/*.md')
 const tags = [...new Set(allPosts.map((post) => post.frontmatter.tags).flat())];
 
 const pageTitle: string = "Tag 모음";
@@ -8,7 +8,7 @@ const pageTitle: string = "Tag 모음";
 
 <BaseLayout pageTitle={pageTitle}>
   <p>태그 모음 페이지요</p>
-  <div class="tags">{tags.map((tag) => <p class="tag"><a href={`/tags/${tag}`}>{tag}</a></p>)}</div>
+  <div class="tags">{tags.map((tag) => <p class="tag"><a href={`/tag/${tag}`}>{tag}</a></p>)}</div>
 </BaseLayout>
 
 <style>
