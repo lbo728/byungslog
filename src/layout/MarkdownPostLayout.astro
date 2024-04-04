@@ -5,13 +5,13 @@ const { frontmatter } = Astro.props;
 ---
 
 <BaseLayout pageTitle={frontmatter.title}>
-  <p>Published on: {frontmatter.pubDate.toString().slice(0, 10)}</p>
   <p><em>{frontmatter.description}</em></p>
-  <p>Written by {frontmatter.author}</p>
+  <p>업로드 날짜 <b>{frontmatter.pubDate.toString().slice(0, 10)}</b></p>
+  <p>작성자 <b>{frontmatter.author}</b></p>
   <img src={frontmatter.image.url} width="300" alt={frontmatter.image.alt} />
-    <div class="tags">
+    <div class="tag-wrap">
     {frontmatter.tags.map((tag:any) => (
-    <p class="tag"><a href={`/tags/${tag}`}>{tag}</a></p>
+    <div class="tag"><a href={`/tags/${tag}`}>{tag}</a></div>
     ))}
   </div>
   <slot />
@@ -19,19 +19,20 @@ const { frontmatter } = Astro.props;
 
 <style>
   a {
-    color: #00539F;
+    color: #5081af;
   }
 
-  .tags {
+  .tag-wrap {
+    margin: 24px 0;
     display: flex;
     flex-wrap: wrap;
+    gap: 16px;
+    font-size: 14px;
   }
 
   .tag {
-    margin: 0.25em;
-    border: dotted 1px #a1a1a1;
-    border-radius: .5em;
-    padding: .5em 1em;
+    border-radius: 100px;
+    padding: 4px 16px;
     font-size: 1.15em;
     background-color: #F8FCFD;
   }
