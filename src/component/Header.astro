@@ -6,8 +6,27 @@ import ThemeIcon from "./ThemeIcon.astro";
 
 <header>
   <nav>
-    <Hamburger />
-    <ThemeIcon />
-    <Navigation />
+    <div class="nav-bar">
+      <Hamburger />
+      <div class="nav-bar-right">
+        <Navigation />
+        <ThemeIcon />
+      </div>
+    </div>
   </nav>
 </header>
+
+<style>
+  .nav-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .nav-bar-right {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    width: 100%;
+  }
+</style>

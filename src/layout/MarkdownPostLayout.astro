@@ -6,13 +6,16 @@ const { frontmatter } = Astro.props;
 
 <BaseLayout pageTitle={frontmatter.title}>
   <p><em>{frontmatter.description}</em></p>
-  <p>업로드 날짜 <b>{frontmatter.pubDate.toString().slice(0, 10)}</b></p>
-  <p>작성자 <b>{frontmatter.author}</b></p>
+  <p><b>{frontmatter.pubDate.toString().slice(0, 10)}</b></p>
   <img src={frontmatter.image.url} width="300" alt={frontmatter.image.alt} />
-    <div class="tag-wrap">
-    {frontmatter.tags.map((tag:any) => (
-    <div class="tag"><a href={`/tags/${tag}`}>{tag}</a></div>
-    ))}
+  <div class="tag-wrap">
+    {
+      frontmatter.tags.map((tag: any) => (
+        <div class="tag">
+          <a href={`/tags/${tag}`}>{tag}</a>
+        </div>
+      ))
+    }
   </div>
   <slot />
 </BaseLayout>
@@ -31,9 +34,12 @@ const { frontmatter } = Astro.props;
   }
 
   .tag {
-    border-radius: 100px;
-    padding: 4px 16px;
+    padding: 4px 8px;
     font-size: 1.15em;
-    background-color: #F8FCFD;
+    border-radius: 4px;
+    color: #0e223c;
+    background-color: #f6f8fa;
+    font-size: 12px;
+    transition: opacity 500ms ease 0s;
   }
 </style>
