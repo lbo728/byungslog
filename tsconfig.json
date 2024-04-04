@@ -5,7 +5,7 @@
       "@component/*": ["src/component/*"],
       "@layout/*": ["src/layout/*"],
       "@script/*": ["src/script/*"],
-      "@style/*": ["src/style/*"],
+      "../style/*": ["src/style/*"],
       "@asset/*": ["src/asset/*"]
     },
     "jsx": "react-jsx",
