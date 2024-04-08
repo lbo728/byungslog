@@ -81,12 +81,12 @@ h1 {
   width: 40px;
   height: 5px;
   margin-bottom: 10px;
-  background-color: #ff9776;
+  background-color: #6740d4;
 }
 
 .nav-links {
   width: 100%;
-  background-color: #ff9776;
+  background-color: #6740d4;
   display: none;
   margin: 0;
 }
@@ -104,7 +104,14 @@ h1 {
 }
 
 .expanded {
-  display: unset;
+  position: absolute;
+  top: 80px;
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+  & a {
+    padding: 8px 0;
+  }
 }
 
 @media screen and (min-width: 636px) {
