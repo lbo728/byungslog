@@ -1,10 +1,24 @@
+/* 다크 모드 */
+
 html.dark {
-  background-color: #0d0950;
+  background-color: #191919;
   color: #fff;
 }
 
 .dark .nav-links a {
   color: #fff;
+}
+
+.dark a {
+  color: #a78af9;
+}
+
+.dark li {
+  color: white;
+}
+
+.dark label {
+  color: #ffffff;
 }
 
 html {
@@ -20,10 +34,15 @@ body {
   line-height: 1.5;
 }
 
+label {
+  color: #121212;
+}
+
 button {
   cursor: pointer;
 }
 
+/* 코드 블럭 */
 code {
   line-height: normal;
   background: rgba(135, 131, 120, 0.15);
@@ -39,7 +58,10 @@ code {
 
 a {
   text-decoration-line: none;
-  color: #121212;
+  color: #6740d4;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 h1 {
