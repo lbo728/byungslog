@@ -4,16 +4,24 @@ import BaseLayout from "../layout/BaseLayout.astro";
 import { getCollection } from "astro:content";
 const allPosts = await getCollection("post");
 
-const pageTitle: string = "Byungsker - Blog";
+const pageTitle: string = "All";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-  <p>This is where I will post my journey learning Astro.</p>
-  <ul>
+  <div class="post-list">
     {
       allPosts.map((post) => (
-        <BlogPost url={`/post/${post.slug}`} title={post.data.title} />
+        <BlogPost url={`/post/${post.slug}`} title={post.data.title} imageUrl={post.data.image.url} desc={post.data.description} />
       ))
     }
-  </ul>
+    </div>
 </BaseLayout>
+
+<style>
+  .post-list {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap; 
+  gap: 64px;
+  }
+</style>

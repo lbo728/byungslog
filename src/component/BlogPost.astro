@@ -1,4 +1,39 @@
 ---
-const {url, title} = Astro.props
+const {url, title, imageUrl, desc} = Astro.props
 ---
-<li><a href={url}>{title}</a></li>
+<div class="post-item">
+  <img src={imageUrl} class="post-item-thumb"/>
+  <div class="post-item-title">
+    <a href={url} class="title">{title}</a>
+    <div>{desc}</div>
+  </div>
+</div>
+
+<style>
+
+  .post-item {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 320px ;
+    justify-content: space-between;
+  }
+
+  .post-item-thumb {
+    width: 360px;
+    height: 360px;
+    /* height: 240px; */
+    object-fit: cover;
+  }
+  
+    .post-item-title {
+      display: flex;
+      flex-direction: column;
+      gap:4px;
+  }
+  .title {
+    font-size: 20px;
+    font-weight: 600;
+
+  }
+</style>
