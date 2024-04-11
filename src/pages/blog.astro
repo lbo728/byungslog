@@ -4,24 +4,29 @@ import BaseLayout from "../layout/BaseLayout.astro";
 import { getCollection } from "astro:content";
 const allPosts = await getCollection("post");
 
-const pageTitle: string = "All";
+const pageTitle: string = "All post";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
   <div class="post-list">
     {
       allPosts.map((post) => (
-        <BlogPost url={`/post/${post.slug}`} title={post.data.title} imageUrl={post.data.image.url} desc={post.data.description} />
+        <BlogPost
+          url={`/post/${post.slug}`}
+          title={post.data.title}
+          imageUrl={post.data.image.url}
+          desc={post.data.description}
+        />
       ))
     }
-    </div>
+  </div>
 </BaseLayout>
 
 <style>
   .post-list {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap; 
-  gap: 64px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 64px;
   }
 </style>
