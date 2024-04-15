@@ -1,21 +1,24 @@
 ---
-const {url, title, imageUrl, desc} = Astro.props
+const { url, title, imageUrl, desc, pubDate } = Astro.props;
 ---
+
 <div class="post-item">
-  <img src={imageUrl} class="post-item-thumb"/>
+  <a href={url} class="title">
+    <img src={imageUrl} class="post-item-thumb" />
+  </a>
   <div class="post-item-title">
     <a href={url} class="title">{title}</a>
     <div>{desc}</div>
+    <div class="post-item-date">{pubDate}</div>
   </div>
 </div>
 
 <style>
-
   .post-item {
     display: flex;
     flex-direction: column;
     gap: 24px;
-    max-width: 320px ;
+    max-width: 320px;
     justify-content: space-between;
   }
 
@@ -25,15 +28,28 @@ const {url, title, imageUrl, desc} = Astro.props
     /* height: 240px; */
     object-fit: cover;
   }
-  
-    .post-item-title {
-      display: flex;
-      flex-direction: column;
-      gap:4px;
+
+  .post-item-title {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .post-item-date {
+    font-size: 12px;
+    color: #d2d2d2;
   }
   .title {
     font-size: 20px;
     font-weight: 600;
+  }
 
+  @media screen and (max-width: 735px) {
+    .post-item {
+      max-width: 100%;
+    }
+    .post-item-thumb {
+      width: 100%;
+    }
   }
 </style>

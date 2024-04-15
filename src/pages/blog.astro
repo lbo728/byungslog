@@ -1,4 +1,5 @@
 ---
+import { formatPubDate } from "src/utli/Date";
 import BlogPost from "../component/BlogPost.astro";
 import BaseLayout from "../layout/BaseLayout.astro";
 import { getCollection } from "astro:content";
@@ -16,6 +17,7 @@ const pageTitle: string = "All post";
           title={post.data.title}
           imageUrl={post.data.image.url}
           desc={post.data.description}
+          pubDate={formatPubDate(post.data.pubDate)}
         />
       ))
     }
@@ -28,5 +30,12 @@ const pageTitle: string = "All post";
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 64px;
+  }
+
+  @media screen and (max-width: 475px) {
+    .post-list {
+      flex-wrap: nowrap;
+      flex-direction: column;
+    }
   }
 </style>
