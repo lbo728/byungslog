@@ -3,7 +3,7 @@ title: 휴먼카인드 - 뤼트허르 브레흐만
 description: "하염없이 믿고 싶은 인간의 본성"
 author: 병스커
 image:
-  url: "https://github.com/lbo728/BlockChainStudy/assets/72309817/69a07344-4c78-4b27-bb09-632295809360"
+  url: "/src/content/post/humankind/img/thumbnail.webp"
   alt: "휴먼카인드"
 pubDate: 2024-04-04
 tags: ["인문학", "서평", "자아성찰", "본성"]
