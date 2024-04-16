@@ -1,8 +1,9 @@
 ---
-import { formatPubDate } from "src/utli/Date";
 import BlogPost from "../component/BlogPost.astro";
 import BaseLayout from "../layout/BaseLayout.astro";
 import { getCollection } from "astro:content";
+import { formatPubDate } from "../utli/Date";
+
 const allPosts = await getCollection("post");
 
 const pageTitle: string = "All post";
