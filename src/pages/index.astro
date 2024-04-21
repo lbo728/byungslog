@@ -1,8 +1,19 @@
 ---
 import BaseLayout from "../layout/BaseLayout.astro";
 const pageTitle = "Recent";
+
+// import { useStoryblokApi } from "@storyblok/astro";
+// import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+
+// const storyblokApi = useStoryblokApi();
+// const { data } = await storyblokApi.get("cdn/stories/home", {
+//   version: "draft",
+// });
+
+// const story = data.story;
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-  <p>post 수</p>
+  <p>병스블로그</p>
+  <!-- <StoryblokComponent blok={story.content} /> -->
 </BaseLayout>
