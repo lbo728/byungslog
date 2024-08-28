@@ -1,65 +1,149 @@
 ---
-import BaseLayout from "@layout/BaseLayout.astro";
-const pageTitle: string = "Byungsker - Admin";
+
 ---
 
-<BaseLayout pageTitle={pageTitle}>
-  <h1>글쓰기</h1>
-
-  <form class="form-style">
-    <label class="form-wrapper">
-      제목
-      <div class="form-input-list">
-        <input type="text" class="form-input" required />
+<html lang="en" transition:animate="none">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Admin</title>
+  </head>
+  <body>
+    <div class="editor">
+      <div class="form">
+        <input id="input" placeholder="제목을 입력해주세요" />
+        <textarea id="textarea" placeholder="당신의 이야기를 적어주세요..."
+        ></textarea>
       </div>
-    </label>
-    <label class="form-wrapper">
-      내용
-      <textarea required class="form-textarea"></textarea>
-    </label>
-    <button type="submit" class="button-primary">글 올리기</button>
-  </form>
-</BaseLayout>
 
-<script></script>
-<style>
-  .form-style {
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    gap: 24px;
-  }
+      <div class="preview">
+        <div id="title"></div>
+        <div id="result"></div>
+      </div>
+    </div>
+    <script>
+      import { Marked } from "marked";
+      const marked = new Marked();
 
-  .form-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    font-size: 14px;
-    color: #a2a2a2;
+      const textareaElement = document.getElementById(
+        "textarea",
+      ) as HTMLTextAreaElement;
 
-    .form-input-list {
-      display: flex;
-      width: 100%;
+      const inputElement = document.getElementById(
+        "input",
+      ) as HTMLTextAreaElement;
 
-      .form-input {
-        display: flex;
-        width: 100%;
-        height: 40px;
+      const resultElement = document.getElementById("result") as HTMLDivElement;
+      const titleElement = document.getElementById("title") as HTMLDivElement;
+
+      if (textareaElement && resultElement) {
+        textareaElement.onkeyup = async function () {
+          const parsedContent = await marked.parse(textareaElement.value);
+          resultElement.innerHTML = parsedContent;
+        };
+        inputElement.onkeyup = async function () {
+          const parsedContent = await marked.parse(inputElement.value);
+          titleElement.innerHTML = parsedContent;
+        };
       }
+    </script>
+  </body>
+
+  <style>
+    body {
+      margin: 0;
+      width: 100vw;
+      height: 100vh;
     }
 
-    .form-textarea {
+    .editor {
+      display: flex;
+      flex-direction: row;
       width: 100%;
-      height: 320px;
+      height: 100%;
+      /* width: 100vw; */
+      /* height: 100vh; */
     }
-  }
+    .form {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 0%;
+      background-color: white;
+      border-right: 1px solid #ccc;
+    }
 
-  .button-primary {
-    width: 100%;
-    background-color: rgb(7, 138, 167);
-    color: white;
-    height: 48px;
-    border: none;
-    border-radius: 8px;
-  }
-</style>
+    #input {
+      height: 40px;
+      font-weight: 700;
+      border: none;
+      resize: none;
+      outline: none;
+      background-color: #f6f6f6;
+      font-size: 40px;
+      padding: 20px;
+    }
+
+    #textarea {
+      height: 100%;
+      border: none;
+
+      resize: none;
+      outline: none;
+      background-color: #f6f6f6;
+      font-size: 14px;
+      font-family: "Monaco", courier, monospace;
+      padding: 20px;
+    }
+
+    .preview {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 0%;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    #title {
+      font-size: 32px;
+      font-weight: 700;
+      padding: 20px;
+    }
+
+    #result {
+      /* display: flex;
+      flex-direction: column;
+      width: 100%;
+      padding: 20px; */
+      padding: 20px;
+    }
+
+    /* textarea,
+    #editor div {
+      display: inline-block;
+      width: 49%;
+      height: 100%;
+      vertical-align: top;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      padding: 0 20px;
+    }
+
+    textarea {
+      border: none;
+      border-right: 1px solid #ccc;
+      resize: none;
+      outline: none;
+      background-color: #f6f6f6;
+      font-size: 14px;
+      font-family: "Monaco", courier, monospace;
+      padding: 20px;
+    }
+
+    code {
+      color: #f66;
+    } */
+  </style>
+</html>
