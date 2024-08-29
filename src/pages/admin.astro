@@ -32,6 +32,11 @@
     </div>
     <script>
       import { Marked } from "marked";
+      import { supabase } from "../lib/supabase";
+      import uploadPost from "./api/uploadPost";
+
+      // console.log("supabase", supabase);
+
       const marked = new Marked();
 
       const textareaElement = document.getElementById(
@@ -55,6 +60,18 @@
           titleElement.innerHTML = parsedContent;
         };
       }
+
+      const clickUpload = document.querySelector(
+        ".btn-primary",
+      ) as HTMLButtonElement;
+
+      clickUpload.onclick = async function () {
+        const title = inputElement.value;
+        const content = textareaElement.value;
+        const tags = ["example", "tags"]; // 태그를 추가하고 싶다면 여기에 추가해
+
+        await uploadPost(title, content, tags);
+      };
     </script>
   </body>
 
