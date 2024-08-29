@@ -3,14 +3,17 @@ import BlogPost from "../component/BlogPost.astro";
 import BaseLayout from "../layout/BaseLayout.astro";
 import { getCollection } from "astro:content";
 import { formatPubDate } from "../utli/Date";
+import { getPosts } from "../pages/api/getPosts";
 
 const allPosts = await getCollection("post");
+
+const latestPosts = await getPosts();
 
 const pageTitle: string = "All post";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-  <div class="post-list">
+  <!-- <div class="post-list">
     {
       allPosts.map((post) => (
         <BlogPost
@@ -22,6 +25,14 @@ const pageTitle: string = "All post";
         />
       ))
     }
+  </div> -->
+  <div class="new-post-list">
+    <div class="title">
+      Latest Posts:
+      <ul>
+        {latestPosts.map((post) => <li>{post.title}</li>)}
+      </ul>
+    </div>
   </div>
 </BaseLayout>
 
@@ -38,5 +49,25 @@ const pageTitle: string = "All post";
       flex-wrap: nowrap;
       flex-direction: column;
     }
+  }
+
+  .new-post-list {
+    margin-top: 40px;
+  }
+
+  .title,
+  .tags {
+    margin-bottom: 20px;
+  }
+
+  .title ul,
+  .tags ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .title li,
+  .tags li {
+    margin-bottom: 10px;
   }
 </style>
