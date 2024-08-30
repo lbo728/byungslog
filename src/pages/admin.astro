@@ -82,6 +82,15 @@
   </body>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    p {
+      margin: 0;
+      line-height: 150%;
+    }
+
     body {
       margin: 0;
       width: 100vw;
@@ -101,6 +110,8 @@
       flex: 1 1 0%;
       background-color: white;
       border-right: 1px solid #ccc;
+      padding-bottom: 80px;
+      background-color: #f6f6f6;
 
       .button-nav {
         background-color: #ffffff;
@@ -169,7 +180,7 @@
     }
 
     #input {
-      height: 40px;
+      /* height: 64px; */
       font-weight: 700;
       border: none;
       resize: none;
@@ -195,7 +206,7 @@
       display: flex;
       flex-direction: column;
       flex: 1 1 0%;
-      padding: 20px;
+      padding: 20px 20px 80px 20px;
       box-sizing: border-box;
       overflow: auto;
     }
@@ -206,10 +217,22 @@
     }
 
     #result {
-    }
+      code {
+        line-height: normal;
+        background: rgba(135, 131, 120, 0.15);
+        color: #eb5757;
+        border-radius: 4px;
+        font-size: 85%;
+        padding: 0.2em 0.4em;
+      }
 
-    code {
-      color: #f66;
+      a {
+        text-decoration-line: none;
+        color: #6740d4;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
   </style>
 </html>
