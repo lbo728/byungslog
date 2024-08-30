@@ -2,6 +2,9 @@
 import BaseLayout from "../../layout/BaseLayout.astro";
 import { getPostById } from "../../api/getPostById";
 import { getPosts } from "../../api/getPosts";
+import { Marked } from "marked";
+
+const marked = new Marked();
 
 export const getStaticPaths = async () => {
   const posts = await getPosts();
@@ -12,21 +15,21 @@ export const getStaticPaths = async () => {
 };
 
 const { id } = Astro.params;
-
 const post = await getPostById(id);
-
 const pageTitle = post ? post.title : "Post Not Found";
+
+const parsedContent = post ? marked.parse(post.content) : "";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
   {
     post ? (
-      <article>
+      <div class="body">
         <div class="tags">
           Tags: {post.tags ? post.tags.join(", ") : "No tags"}
         </div>
-        <div>{post.content}</div>
-      </article>
+        <Fragment class="content" set:html={parsedContent} />
+      </div>
     ) : (
       <div>
         <h1>Post Not Found</h1>
@@ -37,10 +40,9 @@ const pageTitle = post ? post.title : "Post Not Found";
 </BaseLayout>
 
 <style>
-  article {
+  .body {
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
   }
 
   .tags {
