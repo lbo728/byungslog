@@ -1,4 +1,4 @@
-import { supabase } from "../../lib/supabase";
+import { supabase } from "../lib/supabase";
 
 async function uploadPost(title: string, content: string, tags: string[]) {
   const { data, error } = await supabase

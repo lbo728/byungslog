@@ -32,10 +32,8 @@
     </div>
     <script>
       import { Marked } from "marked";
-      import { supabase } from "../lib/supabase";
-      import uploadPost from "./api/uploadPost";
 
-      // console.log("supabase", supabase);
+      import uploadPost from "../api/uploadPost";
 
       const marked = new Marked();
 
@@ -68,10 +66,18 @@
       clickUpload.onclick = async function () {
         const title = inputElement.value;
         const content = textareaElement.value;
-        const tags = ["example", "tags"]; // 태그를 추가하고 싶다면 여기에 추가해
+        const tags = ["example", "tags"];
 
         await uploadPost(title, content, tags);
       };
+
+      const btnPrevious = document.querySelector(
+        ".btn-previous",
+      ) as HTMLButtonElement;
+
+      btnPrevious.addEventListener("click", () => {
+        window.location.href = "/blog";
+      });
     </script>
   </body>
 

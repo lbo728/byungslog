@@ -1,73 +1,55 @@
 ---
-import BlogPost from "../component/BlogPost.astro";
 import BaseLayout from "../layout/BaseLayout.astro";
-import { getCollection } from "astro:content";
-import { formatPubDate } from "../utli/Date";
-import { getPosts } from "../pages/api/getPosts";
-
-const allPosts = await getCollection("post");
+import { getPosts } from "../api/getPosts";
 
 const latestPosts = await getPosts();
 
-const pageTitle: string = "All post";
+console.log("latestPosts", latestPosts);
+
+const pageTitle: string = "All Posts";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-  <!-- <div class="post-list">
-    {
-      allPosts.map((post) => (
-        <BlogPost
-          url={`/post/${post.slug}`}
-          title={post.data.title}
-          imageUrl={post.data.image.url}
-          desc={post.data.description}
-          pubDate={formatPubDate(post.data.pubDate)}
-        />
-      ))
-    }
-  </div> -->
   <div class="new-post-list">
     <div class="title">
       Latest Posts:
       <ul>
-        {latestPosts.map((post) => <li>{post.title}</li>)}
+        {
+          latestPosts.map((post) => (
+            <li>
+              <a href={`/blog/${post.id}`}>{post.title}</a>
+            </li>
+          ))
+        }
       </ul>
     </div>
   </div>
 </BaseLayout>
 
 <style>
-  .post-list {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 64px;
-  }
-
-  @media screen and (max-width: 475px) {
-    .post-list {
-      flex-wrap: nowrap;
-      flex-direction: column;
-    }
-  }
-
   .new-post-list {
     margin-top: 40px;
   }
 
-  .title,
-  .tags {
+  .title {
     margin-bottom: 20px;
   }
 
-  .title ul,
-  .tags ul {
+  .title ul {
     list-style-type: none;
     padding: 0;
   }
 
-  .title li,
-  .tags li {
+  .title li {
     margin-bottom: 10px;
+  }
+
+  .title a {
+    text-decoration: none;
+    color: #0070f3;
+  }
+
+  .title a:hover {
+    text-decoration: underline;
   }
 </style>
