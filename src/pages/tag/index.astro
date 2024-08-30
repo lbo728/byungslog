@@ -1,15 +1,15 @@
 ---
 import BaseLayout from "../../layout/BaseLayout.astro";
-import { getCollection } from "astro:content";
-const allPosts = await getCollection("post");
-const tags = [...new Set(allPosts.map((post) => post.data.tags).flat())];
 
-const pageTitle: string = "Byungsker- Tag";
+import { getTags } from "../../api/getTags";
+
+const tags = await getTags();
+
+const pageTitle: string = "Tags";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-  <p>태그 모음 페이지요</p>
-  <div class="tags">
+  <div class="tag-wrapper">
     {
       tags.map((tag) => (
         <p class="tag">
@@ -25,17 +25,17 @@ const pageTitle: string = "Byungsker- Tag";
     color: #00539f;
   }
 
-  .tags {
+  .tag-wrapper {
     display: flex;
     flex-wrap: wrap;
+    gap: 8px;
   }
 
   .tag {
-    margin: 0.25em;
-    border: dotted 1px #a1a1a1;
-    border-radius: 0.5em;
-    padding: 0.5em 1em;
-    font-size: 1.15em;
+    /* border: 1px solid #a1a1a1; */
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 16px;
     background-color: #f8fcfd;
   }
 </style>

@@ -1,37 +1,62 @@
 ---
-import BlogPost from "../../component/BlogPost.astro";
 import BaseLayout from "../../layout/BaseLayout.astro";
-import { getCollection } from "astro:content";
+import { getPosts } from "../../api/getPosts";
+import { getTags } from "src/api/getTags";
 
 export const getStaticPaths = async () => {
-  // const allPosts:any = await Astro.glob('../post/*.md');
-  const allPosts: any = await getCollection("post");
-  const uniqueTags = [
-    ...new Set(allPosts.map((post: any) => post.data.tags).flat()),
-  ];
+  const uniqueTags = await getTags();
 
-  return uniqueTags.map((tag) => {
-    const filteredPosts = allPosts.filter((post: any) =>
-      post.data.tags.includes(tag),
-    );
-    return {
-      params: { tag },
-      props: { posts: filteredPosts },
-    };
-  });
+  return uniqueTags.map((tag) => ({
+    params: { tag },
+  }));
 };
 
 const { tag } = Astro.params;
-const { posts } = Astro.props;
+
+const allPosts = await getPosts();
+const filteredPosts = allPosts.filter((post) => post.tags?.includes(tag));
+
+const pageTitle = `Tag > ${tag} `;
 ---
 
-<BaseLayout pageTitle={tag}>
-  <p>Posts tagged with {tag}</p>
-  <ul>
+<BaseLayout pageTitle={pageTitle}>
+  <div class="tag-wrapper">
     {
-      posts.map((post: any) => (
-        <BlogPost url={`/post/${post.slug}`} title={post.data.title} />
-      ))
+      filteredPosts.length > 0 ? (
+        <ul>
+          {filteredPosts.map((post) => (
+            <li>
+              <a href={`/blog/${post.id}`}>{post.title}</a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No posts found with this tag.</p>
+      )
     }
-  </ul>
+  </div>
 </BaseLayout>
+
+<style>
+  .tag-wrapper {
+    max-width: 800px;
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+
+    a {
+      text-decoration: none;
+      color: #2d97d9;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+</style>
