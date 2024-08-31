@@ -27,7 +27,7 @@
         <div class="button-nav">
           <div class="btn-previous">
             <img src="/icon-arrow-back.svg" alt="left icon" />
-            나가기
+            <span>나가기</span>
           </div>
           <div class="btn-wrapper">
             <div class="btn-sub">임시 저장</div>
@@ -43,7 +43,6 @@
     </div>
     <script>
       import { Marked } from "marked";
-
       import uploadPost from "../api/uploadPost";
 
       const marked = new Marked();
@@ -51,25 +50,11 @@
       const textareaElement = document.getElementById(
         "textarea",
       ) as HTMLTextAreaElement;
-
       const inputElement = document.getElementById(
         "input",
       ) as HTMLTextAreaElement;
-
       const resultElement = document.getElementById("result") as HTMLDivElement;
       const titleElement = document.getElementById("title") as HTMLDivElement;
-
-      if (textareaElement && resultElement) {
-        textareaElement.onkeyup = async function () {
-          const parsedContent = await marked.parse(textareaElement.value);
-          resultElement.innerHTML = parsedContent;
-        };
-        inputElement.onkeyup = async function () {
-          const parsedContent = await marked.parse(inputElement.value);
-          titleElement.innerHTML = parsedContent;
-        };
-      }
-
       const tagInputElement = document.getElementById(
         "tagp-input",
       ) as HTMLInputElement;
@@ -79,245 +64,326 @@
 
       let tagList = [] as string[];
 
-      if (tagInputElement) {
-        tagInputElement.addEventListener("keyup", function (event) {
-          if (event.key === "Enter" && tagInputElement.value.trim() !== "") {
-            const newTag = tagInputElement.value.trim();
+      // 로컬 스토리지에서 값을 로드하고 초기화
+      function loadSavedValues() {
+        const savedTitle = localStorage.getItem("draftTitle");
+        const savedContent = localStorage.getItem("draftContent");
+        const savedTags = localStorage.getItem("draftTags");
 
-            // 중복 체크
-            if (!tagList.includes(newTag)) {
-              // 태그와 삭제 아이콘 생성
-              const tagElement = document.createElement("div");
-              tagElement.classList.add("tag");
-              tagElement.textContent = newTag;
+        if (savedTitle) {
+          inputElement.value = savedTitle;
+          titleElement.innerHTML = savedTitle;
+        }
+        if (savedContent) {
+          textareaElement.value = savedContent;
+          resultElement.innerHTML = marked.parse(savedContent);
+        }
+        if (savedTags) {
+          tagList = JSON.parse(savedTags);
+          tagList.forEach((tag) => addTagToDOM(tag));
+        }
+      }
 
-              const deleteIcon = document.createElement("img");
-              deleteIcon.src = "/icon-x-mono.svg";
-              deleteIcon.alt = "delete icon";
+      // 태그를 DOM에 추가하고 로컬 스토리지에 저장
+      function addTagToDOM(tag: string) {
+        const tagElement = document.createElement("div");
+        tagElement.classList.add("tag");
+        tagElement.textContent = tag;
 
-              // 삭제 아이콘 클릭 이벤트 리스너
-              deleteIcon.addEventListener("click", function () {
-                tagWrapperElement.removeChild(tagElement);
-                tagList = tagList.filter((tag) => tag !== newTag);
-              });
+        const deleteIcon = document.createElement("img");
+        deleteIcon.src = "/icon-x-mono.svg";
+        deleteIcon.alt = "delete icon";
+        deleteIcon.addEventListener("click", () => removeTag(tag));
 
-              // 태그 요소에 삭제 아이콘 추가
-              tagElement.appendChild(deleteIcon);
+        tagElement.appendChild(deleteIcon);
+        tagWrapperElement.insertBefore(tagElement, tagInputElement);
+      }
 
-              // 태그 리스트에 추가하고 DOM에 삽입
-              tagList.push(newTag);
-              tagWrapperElement.insertBefore(tagElement, tagInputElement);
+      // 태그를 리스트와 로컬 스토리지에서 제거
+      function removeTag(tag: string) {
+        tagWrapperElement.querySelector(`.tag:contains(${tag})`)?.remove();
+        tagList = tagList.filter((t) => t !== tag);
+        localStorage.setItem("draftTags", JSON.stringify(tagList));
+      }
 
-              // 입력 필드 초기화
-              tagInputElement.value = "";
-            } else {
-              alert("이미 존재하는 태그입니다!");
-            }
+      // 태그 입력 필드에서 태그를 추가
+      function handleTagInput(event: KeyboardEvent) {
+        if (event.key === "Enter" && tagInputElement.value.trim() !== "") {
+          const newTag = tagInputElement.value.trim();
+
+          if (!tagList.includes(newTag)) {
+            tagList.push(newTag);
+            addTagToDOM(newTag);
+            tagInputElement.value = "";
+            localStorage.setItem("draftTags", JSON.stringify(tagList));
+          } else {
+            alert("이미 존재하는 태그입니다!");
           }
-        });
+        }
+      }
+
+      // '업로드' 버튼 클릭 시 처리
+      function handleUploadClick() {
+        const title = inputElement.value;
+        const content = textareaElement.value;
+        const tags = tagList;
+
+        if (confirm("이 내용으로 업로드 하시겠어요?")) {
+          uploadPost(title, content, tags).then((result) => {
+            if (result.success) {
+              clearInputs();
+              window.location.href = `/blog/${result.id}`;
+            } else {
+              alert(
+                "포스트 업로드 중 오류가 발생했습니다. 다시 시도해 주세요.",
+              );
+            }
+          });
+        }
+      }
+
+      function handleSubClick() {
+        saveDraft();
+        alert("임시 저장 되었어요!");
+      }
+
+      // '나가기' 버튼 클릭 시 처리
+      function handlePreviousClick() {
+        if (confirm("작성 중인 내용이 있습니다. 임시 저장하고 나가시겠어요?")) {
+          saveDraft();
+          window.location.href = "/";
+        } else {
+          clearInputs();
+          window.location.href = "/";
+        }
+      }
+
+      // 임시 저장
+      function saveDraft() {
+        localStorage.setItem("draftTitle", inputElement.value);
+        localStorage.setItem("draftContent", textareaElement.value);
+        localStorage.setItem("draftTags", JSON.stringify(tagList));
+      }
+
+      // 입력 필드와 태그를 초기화
+      function clearInputs() {
+        inputElement.value = "";
+        textareaElement.value = "";
+        titleElement.innerHTML = "";
+        resultElement.innerHTML = "";
+        tagList = [];
+        while (tagWrapperElement.firstChild) {
+          tagWrapperElement.removeChild(tagWrapperElement.firstChild);
+        }
+        localStorage.removeItem("draftTitle");
+        localStorage.removeItem("draftContent");
+        localStorage.removeItem("draftTags");
+      }
+
+      // 초기화 및 이벤트 리스너 등록
+      loadSavedValues();
+      if (tagInputElement) {
+        tagInputElement.addEventListener("keyup", handleTagInput);
       }
 
       const clickUpload = document.querySelector(
         ".btn-primary",
       ) as HTMLButtonElement;
-
-      clickUpload.onclick = async function () {
-        const title = inputElement.value;
-        const content = textareaElement.value;
-        const tags = tagList; // 태그 리스트를 업로드에 사용
-
-        await uploadPost(title, content, tags);
-      };
+      clickUpload.onclick = handleUploadClick;
 
       const btnPrevious = document.querySelector(
         ".btn-previous",
       ) as HTMLButtonElement;
+      btnPrevious.addEventListener("click", handlePreviousClick);
+      const btnSub = document.querySelector(".btn-sub") as HTMLButtonElement;
 
-      btnPrevious.addEventListener("click", () => {
-        window.location.href = "/blog";
-      });
+      btnSub.addEventListener("click", handleSubClick);
     </script>
   </body>
+</html>
 
-  <style>
-    * {
-      box-sizing: border-box;
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  p {
+    margin: 0;
+    line-height: 150%;
+  }
+
+  body {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .editor {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+  }
+  .form {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    flex: 1 1 0%;
+    background-color: white;
+    border-right: 1px solid #ccc;
+    padding-bottom: 80px;
+    background-color: #f6f6f6;
+  }
+
+  .button-nav {
+    background-color: #ffffff;
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.04);
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px 8px;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    z-index: 222;
+
+    .btn-previous {
+      display: flex;
+      background-color: transparent;
+      padding: 0 12px;
+      align-items: center;
+      width: 120px;
+      height: 40px;
+      border-radius: 8px;
+      gap: 8px;
+      cursor: pointer;
+
+      span {
+        margin-top: 4px;
+      }
+
+      &:hover {
+        background-color: #f2f2f2;
+      }
     }
 
-    p {
-      margin: 0;
-      line-height: 150%;
-    }
-
-    body {
-      margin: 0;
-      width: 100vw;
-      height: 100vh;
-    }
-
-    .editor {
+    .btn-wrapper {
       display: flex;
       flex-direction: row;
-      width: 100%;
-      height: 100%;
-    }
-    .form {
-      display: flex;
-      position: relative;
-      flex-direction: column;
-      flex: 1 1 0%;
-      background-color: white;
-      border-right: 1px solid #ccc;
-      padding-bottom: 80px;
-      background-color: #f6f6f6;
-    }
-
-    .button-nav {
-      background-color: #ffffff;
-      box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.04);
-      display: flex;
-      width: 100%;
-      box-sizing: border-box;
-      padding: 16px 8px;
-      justify-content: space-between;
-      align-items: center;
-      position: absolute;
-      bottom: 0;
-      z-index: 222;
-
-      .btn-previous {
-        display: flex;
-        background-color: transparent;
-        padding: 0 12px;
-        align-items: center;
-        width: 120px;
-        height: 40px;
-        border-radius: 8px;
-        gap: 8px;
-        cursor: pointer;
-
-        &:hover {
-          background-color: #f2f2f2;
-        }
-      }
-
-      .btn-wrapper {
-        display: flex;
-        flex-direction: row;
-        gap: 8px;
-        padding-right: 12px;
-      }
-
-      .btn-primary {
-        display: flex;
-        background-color: #2d97d9;
-        justify-content: center;
-        align-items: center;
-        width: 120px;
-        height: 40px;
-        border-radius: 8px;
-        color: white;
-        cursor: pointer;
-
-        &:hover {
-          background-color: rgb(41, 135, 194);
-        }
-      }
-      .btn-sub {
-        display: flex;
-        background-color: transparent;
-        justify-content: center;
-        align-items: center;
-        width: 120px;
-        height: 40px;
-        border-radius: 8px;
-        cursor: pointer;
-
-        &:hover {
-          background-color: #f2f2f2;
-        }
-      }
-    }
-    input {
-      border: none;
-      resize: none;
-      outline: none;
-      background-color: #f6f6f6;
-
-      padding: 20px;
-    }
-
-    .title {
-      font-weight: 700;
-      font-size: 40px;
-    }
-
-    .tag-wrapper {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
       gap: 8px;
-      padding: 20px;
-
-      .tag {
-        font-size: 16px;
-        display: flex;
-        gap: 4px;
-        align-items: center;
-        border-radius: 100px;
-        padding: 12px;
-        background: #e2e2e2;
-        color: #8b95a1;
-        cursor: pointer;
-      }
-
-      .input {
-        font-size: 16px;
-        padding: 0;
-      }
+      padding-right: 12px;
     }
 
-    #textarea {
-      height: 100%;
-      border: none;
-      resize: none;
-      outline: none;
-      background-color: #f6f6f6;
-      font-size: 16px;
-      font-family: "Monaco", courier, monospace;
-      padding: 20px;
-    }
-
-    .preview {
+    .btn-primary {
       display: flex;
-      flex-direction: column;
-      flex: 1 1 0%;
-      padding: 20px 20px 80px 20px;
-      box-sizing: border-box;
-      overflow: auto;
-    }
+      background-color: #2d97d9;
+      justify-content: center;
+      align-items: center;
+      width: 120px;
+      height: 40px;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
 
-    #title {
-      font-size: 32px;
-      font-weight: 700;
-    }
-    #result {
-      code {
-        line-height: normal;
-        background: rgba(135, 131, 120, 0.15);
-        color: #eb5757;
-        border-radius: 4px;
-        font-size: 85%;
-        padding: 0.2em 0.4em;
-      }
-
-      a {
-        text-decoration-line: none;
-        color: #6740d4;
-        &:hover {
-          text-decoration: underline;
-        }
+      &:hover {
+        background-color: rgb(41, 135, 194);
       }
     }
-  </style>
-</html>
+    .btn-sub {
+      display: flex;
+      background-color: transparent;
+      justify-content: center;
+      align-items: center;
+      width: 120px;
+      height: 40px;
+      border-radius: 8px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #f2f2f2;
+      }
+    }
+  }
+  input {
+    border: none;
+    resize: none;
+    outline: none;
+    background-color: #f6f6f6;
+
+    padding: 20px;
+  }
+
+  .title {
+    font-weight: 700;
+    font-size: 40px;
+  }
+
+  .tag-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 20px;
+
+    .tag {
+      font-size: 16px;
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      border-radius: 100px;
+      padding: 12px;
+      background: #e2e2e2;
+      color: #8b95a1;
+      cursor: pointer;
+    }
+
+    .input {
+      font-size: 16px;
+      padding: 0;
+    }
+  }
+
+  #textarea {
+    height: 100%;
+    border: none;
+    resize: none;
+    outline: none;
+    background-color: #f6f6f6;
+    font-size: 16px;
+    font-family: "Monaco", courier, monospace;
+    padding: 20px;
+  }
+
+  .preview {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0%;
+    padding: 20px 20px 80px 20px;
+    box-sizing: border-box;
+    overflow: auto;
+  }
+
+  #title {
+    font-size: 32px;
+    font-weight: 700;
+  }
+  #result {
+    code {
+      line-height: normal;
+      background: rgba(135, 131, 120, 0.15);
+      color: #eb5757;
+      border-radius: 4px;
+      font-size: 85%;
+      padding: 0.2em 0.4em;
+    }
+
+    a {
+      text-decoration-line: none;
+      color: #6740d4;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+</style>
