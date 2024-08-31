@@ -13,11 +13,22 @@
   <body>
     <div class="editor">
       <div class="form">
-        <input id="input" placeholder="제목을 입력해주세요" />
-        <textarea id="textarea" placeholder="당신의 이야기를 적어주세요..."
+        <input id="input" class="title" placeholder="제목을 입력해주세요" />
+        <div class="tag-wrapper">
+          <input
+            id="tagp-input"
+            class="input"
+            placeholder="태그를 입력해주세요"
+          />
+        </div>
+
+        <textarea id="textarea" placeholder="이제 이야기를 시작하세요"
         ></textarea>
         <div class="button-nav">
-          <div class="btn-previous">나가기</div>
+          <div class="btn-previous">
+            <img src="/icon-arrow-back.svg" alt="left icon" />
+            나가기
+          </div>
           <div class="btn-wrapper">
             <div class="btn-sub">임시 저장</div>
             <div class="btn-primary">업로드</div>
@@ -59,6 +70,53 @@
         };
       }
 
+      const tagInputElement = document.getElementById(
+        "tagp-input",
+      ) as HTMLInputElement;
+      const tagWrapperElement = document.querySelector(
+        ".tag-wrapper",
+      ) as HTMLDivElement;
+
+      let tagList = [] as string[];
+
+      if (tagInputElement) {
+        tagInputElement.addEventListener("keyup", function (event) {
+          if (event.key === "Enter" && tagInputElement.value.trim() !== "") {
+            const newTag = tagInputElement.value.trim();
+
+            // 중복 체크
+            if (!tagList.includes(newTag)) {
+              // 태그와 삭제 아이콘 생성
+              const tagElement = document.createElement("div");
+              tagElement.classList.add("tag");
+              tagElement.textContent = newTag;
+
+              const deleteIcon = document.createElement("img");
+              deleteIcon.src = "/icon-x-mono.svg";
+              deleteIcon.alt = "delete icon";
+
+              // 삭제 아이콘 클릭 이벤트 리스너
+              deleteIcon.addEventListener("click", function () {
+                tagWrapperElement.removeChild(tagElement);
+                tagList = tagList.filter((tag) => tag !== newTag);
+              });
+
+              // 태그 요소에 삭제 아이콘 추가
+              tagElement.appendChild(deleteIcon);
+
+              // 태그 리스트에 추가하고 DOM에 삽입
+              tagList.push(newTag);
+              tagWrapperElement.insertBefore(tagElement, tagInputElement);
+
+              // 입력 필드 초기화
+              tagInputElement.value = "";
+            } else {
+              alert("이미 존재하는 태그입니다!");
+            }
+          }
+        });
+      }
+
       const clickUpload = document.querySelector(
         ".btn-primary",
       ) as HTMLButtonElement;
@@ -66,7 +124,7 @@
       clickUpload.onclick = async function () {
         const title = inputElement.value;
         const content = textareaElement.value;
-        const tags = ["example", "tags"];
+        const tags = tagList; // 태그 리스트를 업로드에 사용
 
         await uploadPost(title, content, tags);
       };
@@ -112,92 +170,120 @@
       border-right: 1px solid #ccc;
       padding-bottom: 80px;
       background-color: #f6f6f6;
+    }
 
-      .button-nav {
-        background-color: #ffffff;
-        box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.04);
+    .button-nav {
+      background-color: #ffffff;
+      box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.04);
+      display: flex;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 16px 8px;
+      justify-content: space-between;
+      align-items: center;
+      position: absolute;
+      bottom: 0;
+      z-index: 222;
+
+      .btn-previous {
         display: flex;
-        width: 100%;
-        box-sizing: border-box;
-        padding: 16px 24px;
-        justify-content: space-between;
+        background-color: transparent;
+        padding: 0 12px;
         align-items: center;
-        position: absolute;
-        bottom: 0;
-        z-index: 222;
+        width: 120px;
+        height: 40px;
+        border-radius: 8px;
+        gap: 8px;
+        cursor: pointer;
 
-        .btn-previous {
-          display: flex;
-          background-color: transparent;
-          justify-content: center;
-          align-items: center;
-          width: 120px;
-          height: 40px;
-          border-radius: 8px;
-          cursor: pointer;
-
-          &:hover {
-            background-color: #f2f2f2;
-          }
+        &:hover {
+          background-color: #f2f2f2;
         }
+      }
 
-        .btn-wrapper {
-          display: flex;
-          flex-direction: row;
-          gap: 8px;
+      .btn-wrapper {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+        padding-right: 12px;
+      }
+
+      .btn-primary {
+        display: flex;
+        background-color: #2d97d9;
+        justify-content: center;
+        align-items: center;
+        width: 120px;
+        height: 40px;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+
+        &:hover {
+          background-color: rgb(41, 135, 194);
         }
+      }
+      .btn-sub {
+        display: flex;
+        background-color: transparent;
+        justify-content: center;
+        align-items: center;
+        width: 120px;
+        height: 40px;
+        border-radius: 8px;
+        cursor: pointer;
 
-        .btn-primary {
-          display: flex;
-          background-color: #2d97d9;
-          justify-content: center;
-          align-items: center;
-          width: 120px;
-          height: 40px;
-          border-radius: 8px;
-          color: white;
-          cursor: pointer;
-
-          &:hover {
-            background-color: rgb(41, 135, 194);
-          }
-        }
-        .btn-sub {
-          display: flex;
-          background-color: transparent;
-          justify-content: center;
-          align-items: center;
-          width: 120px;
-          height: 40px;
-          border-radius: 8px;
-          cursor: pointer;
-
-          &:hover {
-            background-color: #f2f2f2;
-          }
+        &:hover {
+          background-color: #f2f2f2;
         }
       }
     }
-
-    #input {
-      /* height: 64px; */
-      font-weight: 700;
+    input {
       border: none;
       resize: none;
       outline: none;
       background-color: #f6f6f6;
-      font-size: 40px;
+
       padding: 20px;
+    }
+
+    .title {
+      font-weight: 700;
+      font-size: 40px;
+    }
+
+    .tag-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      padding: 20px;
+
+      .tag {
+        font-size: 16px;
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        border-radius: 100px;
+        padding: 12px;
+        background: #e2e2e2;
+        color: #8b95a1;
+        cursor: pointer;
+      }
+
+      .input {
+        font-size: 16px;
+        padding: 0;
+      }
     }
 
     #textarea {
       height: 100%;
       border: none;
-
       resize: none;
       outline: none;
       background-color: #f6f6f6;
-      font-size: 14px;
+      font-size: 16px;
       font-family: "Monaco", courier, monospace;
       padding: 20px;
     }
