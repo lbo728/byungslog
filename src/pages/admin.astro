@@ -24,6 +24,8 @@
 
         <textarea id="textarea" placeholder="이제 이야기를 시작하세요"
         ></textarea>
+        <button id="testInsertImage">Test Insert Image</button>
+
         <div class="button-nav">
           <div class="btn-previous">
             <img src="/icon-arrow-back.svg" alt="left icon" />
@@ -44,6 +46,7 @@
     <script>
       import { Marked } from "marked";
       import uploadPost from "../api/uploadPost";
+      import { uploadImage } from "../api/uploadImage";
 
       const marked = new Marked();
 
@@ -65,7 +68,7 @@
       let tagList = [] as string[];
 
       // 로컬 스토리지에서 값을 로드하고 초기화
-      function loadSavedValues() {
+      async function loadSavedValues() {
         const savedTitle = localStorage.getItem("draftTitle");
         const savedContent = localStorage.getItem("draftContent");
         const savedTags = localStorage.getItem("draftTags");
@@ -76,7 +79,7 @@
         }
         if (savedContent) {
           textareaElement.value = savedContent;
-          resultElement.innerHTML = marked.parse(savedContent);
+          resultElement.innerHTML = await marked.parse(savedContent);
         }
         if (savedTags) {
           tagList = JSON.parse(savedTags);
@@ -180,6 +183,49 @@
         localStorage.removeItem("draftTags");
       }
 
+      // 이미지 드롭 이벤트 처리
+      async function handleDrop(event: DragEvent) {
+        event.preventDefault();
+        const files = event.dataTransfer?.files;
+
+        if (!files || files.length === 0) return;
+
+        const file = files[0];
+        const imageUrl = await uploadImage(file);
+
+        if (imageUrl) {
+          insertImageToMarkdown(imageUrl);
+        }
+      }
+
+      // 마크다운에 이미지 삽입
+      function insertImageToMarkdown(url: string) {
+        const textarea = document.getElementById(
+          "textarea",
+        ) as HTMLTextAreaElement | null;
+
+        if (textarea) {
+          const markdownImage = `![](${url})\n`;
+          const cursorPos = textarea.selectionStart ?? 0;
+          const textBefore = textarea.value.substring(0, cursorPos);
+          const textAfter = textarea.value.substring(cursorPos);
+
+          console.log("Inserting image URL:", url);
+          console.log("Current Textarea Value:", textarea.value);
+          console.log("Text Before:", textBefore);
+          console.log("Text After:", textAfter);
+
+          textarea.value = textBefore + markdownImage + textAfter;
+          textarea.selectionStart = textarea.selectionEnd =
+            cursorPos + markdownImage.length;
+          textarea.focus();
+
+          console.log("Updated Textarea Value:", textarea.value);
+        } else {
+          console.error("Textarea element not found");
+        }
+      }
+
       // 초기화 및 이벤트 리스너 등록
       loadSavedValues();
       if (tagInputElement) {
@@ -195,9 +241,21 @@
         ".btn-previous",
       ) as HTMLButtonElement;
       btnPrevious.addEventListener("click", handlePreviousClick);
-      const btnSub = document.querySelector(".btn-sub") as HTMLButtonElement;
 
+      const btnSub = document.querySelector(".btn-sub") as HTMLButtonElement;
       btnSub.addEventListener("click", handleSubClick);
+
+      document
+        .getElementById("testInsertImage")
+        ?.addEventListener("click", () => {
+          insertImageToMarkdown("https://example.com/test-image.jpg");
+        });
+
+      // 드롭 이벤트 리스너 등록
+      textareaElement.addEventListener("drop", handleDrop);
+      textareaElement.addEventListener("dragover", (event) =>
+        event.preventDefault(),
+      );
     </script>
   </body>
 </html>
