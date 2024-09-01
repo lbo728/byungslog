@@ -81,8 +81,7 @@ import "../style/markdown.css";
         const savedTags = localStorage.getItem("draftTags");
 
         if (savedTitle) {
-          inputElement.value = savedTitle;
-          titleElement.innerHTML = savedTitle;
+          await markedWriteContent(savedTitle, titleElement);
         }
         if (savedContent) {
           await markedWriteContent(savedContent, resultElement);
@@ -180,12 +179,9 @@ import "../style/markdown.css";
         const tags = tagList;
         const slug = slugify(slugElement.value);
 
-        console.log("slugElement.value:", slugElement.value);
-        console.log("slug:", slug);
-
         // 유효성 검사 호출
         if (!validateInputs(title, content, tags, slug)) {
-          return; // 유효성 검사 실패 시 업로드 프로세스 중단
+          return;
         }
 
         if (confirm("이 내용으로 업로드 하시겠어요?")) {
@@ -292,6 +288,13 @@ import "../style/markdown.css";
         tagInputElement.addEventListener("keyup", handleTagInput);
       }
 
+      if (inputElement) {
+        inputElement.addEventListener(
+          "keyup",
+          async () =>
+            await markedWriteContent(inputElement.value, titleElement),
+        );
+      }
       if (textareaElement) {
         textareaElement.addEventListener(
           "keyup",
@@ -367,7 +370,7 @@ import "../style/markdown.css";
     display: flex;
     width: 100%;
     box-sizing: border-box;
-    padding: 16px 8px;
+    padding: 16px 24px;
     justify-content: space-between;
     align-items: center;
     position: absolute;
@@ -399,7 +402,6 @@ import "../style/markdown.css";
       display: flex;
       flex-direction: row;
       gap: 8px;
-      padding-right: 12px;
     }
 
     .btn-primary {
@@ -433,6 +435,10 @@ import "../style/markdown.css";
       }
     }
   }
+
+  .title {
+    padding: 40px 24px 24px 40px;샛
+  }
   input {
     border: none;
     resize: none;
@@ -440,11 +446,12 @@ import "../style/markdown.css";
     /* background-color: #f6f6f6; */
     background-color: #242424;
 
-    padding: 20px;
+    /* padding: 20px; */
+    padding: 24px 24px 24px 40px;
 
     &::placeholder {
-      color: #a2a2a2; /* 원하는 색상으로 변경 */
-      opacity: 1; /* 기본적으로 투명도가 0.7로 설정되어 있어서 명확하게 보이려면 1로 설정 */
+      color: #a2a2a2;
+      opacity: 0.7;
     }
   }
 
@@ -462,7 +469,7 @@ import "../style/markdown.css";
     flex-wrap: wrap;
     align-items: center;
     gap: 8px;
-    padding: 20px;
+    padding: 24px 24px 24px 40px;
 
     .tag {
       font-size: 16px;
@@ -498,11 +505,11 @@ import "../style/markdown.css";
     background-color: #242424;
     font-size: 16px;
     font-family: "Monaco", courier, monospace;
-    padding: 20px;
+    padding: 24px 24px 24px 40px;
 
     &::placeholder {
-      color: #a2a2a2; /* 원하는 색상으로 변경 */
-      opacity: 1; /* 기본적으로 투명도가 0.7로 설정되어 있어서 명확하게 보이려면 1로 설정 */
+      color: #a2a2a2;
+      opacity: 0.7; 
     }
   }
 
@@ -510,7 +517,8 @@ import "../style/markdown.css";
     display: flex;
     flex-direction: column;
     flex: 1 1 0%;
-    padding: 20px 20px 80px 20px;
+    /* padding: 20px 20px 80px 20px; */
+    padding: 40px 40px 80px 40px;
     box-sizing: border-box;
     overflow: auto;
   }

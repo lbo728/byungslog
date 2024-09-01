@@ -98,11 +98,11 @@ html {
     a {
       color: #a78af9;
 
-      label {
+      span {
         color: #ffffff;
       }
 
-      &:hover label {
+      &:hover span {
         color: #6740d4; /* label의 색상 변경 */
       }
     }
