@@ -1,11 +1,7 @@
+import { generateSafeFileName } from "src/utils/fileName";
 import { supabase } from "../lib/supabase";
 
-// 유니코드 문자를 제거한 파일 이름 생성
-function generateSafeFileName(fileName: string): string {
-  return fileName.replace(/[^\x00-\x7F]/g, ""); // ASCII 문자만 남기기
-}
-
-export async function uploadImage(file: File): Promise<string | null> {
+export default async function uploadImage(file: File): Promise<string | null> {
   const safeFileName = generateSafeFileName(`${Date.now()}_${file.name}`);
 
   // Supabase Storage에 이미지 업로드

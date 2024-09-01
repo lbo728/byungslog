@@ -14,6 +14,7 @@
     <div class="editor">
       <div class="form">
         <input id="input" class="title" placeholder="제목을 입력해주세요" />
+        <input class="slug" placeholder="영문 제목을 입력해주세요." />
         <div class="tag-wrapper">
           <input
             id="tagp-input"
@@ -24,7 +25,6 @@
 
         <textarea id="textarea" placeholder="이제 이야기를 시작하세요"
         ></textarea>
-        <button id="testInsertImage">Test Insert Image</button>
 
         <div class="button-nav">
           <div class="btn-previous">
@@ -44,26 +44,33 @@
       </div>
     </div>
     <script>
-      import { Marked } from "marked";
       import uploadPost from "../api/uploadPost";
-      import { uploadImage } from "../api/uploadImage";
-
-      const marked = new Marked();
+      import uploadImage from "../api/uploadImage";
+      //
+      import slugify from "../utils/slugify";
+      import { markedWriteContent } from "../utils/marked";
 
       const textareaElement = document.getElementById(
         "textarea",
       ) as HTMLTextAreaElement;
+
       const inputElement = document.getElementById(
         "input",
       ) as HTMLTextAreaElement;
+
       const resultElement = document.getElementById("result") as HTMLDivElement;
+
       const titleElement = document.getElementById("title") as HTMLDivElement;
+
       const tagInputElement = document.getElementById(
         "tagp-input",
       ) as HTMLInputElement;
+
       const tagWrapperElement = document.querySelector(
         ".tag-wrapper",
       ) as HTMLDivElement;
+
+      const slugElement = document.querySelector(".slug") as HTMLInputElement;
 
       let tagList = [] as string[];
 
@@ -78,8 +85,7 @@
           titleElement.innerHTML = savedTitle;
         }
         if (savedContent) {
-          textareaElement.value = savedContent;
-          resultElement.innerHTML = await marked.parse(savedContent);
+          await markedWriteContent(savedContent, resultElement);
         }
         if (savedTags) {
           tagList = JSON.parse(savedTags);
@@ -104,8 +110,20 @@
 
       // 태그를 리스트와 로컬 스토리지에서 제거
       function removeTag(tag: string) {
-        tagWrapperElement.querySelector(`.tag:contains(${tag})`)?.remove();
+        // 모든 태그 요소를 가져옴
+        const tagElements = tagWrapperElement.querySelectorAll(".tag");
+
+        // 각 태그 요소를 순회하며 텍스트 내용이 일치하는 요소를 찾음
+        tagElements.forEach((tagElement) => {
+          if (tagElement.textContent?.trim() === tag) {
+            tagElement.remove(); // 일치하는 태그 요소를 제거
+          }
+        });
+
+        // 태그 리스트에서 해당 태그를 제거
         tagList = tagList.filter((t) => t !== tag);
+
+        // 로컬 스토리지에 변경된 태그 리스트를 저장
         localStorage.setItem("draftTags", JSON.stringify(tagList));
       }
 
@@ -125,17 +143,56 @@
         }
       }
 
+      function validateInputs(
+        title: string,
+        content: string,
+        tags: string[],
+        slug: string,
+      ) {
+        if (!title.trim()) {
+          alert("아직 제목을 작성하지 않았어요!");
+          return false;
+        }
+        if (!content.trim()) {
+          alert("아직 내용을 작성하지 않았어요!");
+          return false;
+        }
+        if (!tags || tags.length === 0) {
+          alert("아직 태그가 없어요!");
+          return false;
+        }
+        if (!slug.trim()) {
+          alert("아직 영문 타이틀을 작성하지 않았어요!");
+          return false;
+        }
+        if (/[\u3130-\uD79D]|[^a-zA-Z\s-]/.test(slug)) {
+          alert("영문 타이틀은 영문자, 공백, 하이픈만 가능해요!");
+          return false;
+        }
+
+        return true;
+      }
+
       // '업로드' 버튼 클릭 시 처리
       function handleUploadClick() {
         const title = inputElement.value;
         const content = textareaElement.value;
         const tags = tagList;
+        const slug = slugify(slugElement.value);
+
+        console.log("slugElement.value:", slugElement.value);
+        console.log("slug:", slug);
+
+        // 유효성 검사 호출
+        if (!validateInputs(title, content, tags, slug)) {
+          return; // 유효성 검사 실패 시 업로드 프로세스 중단
+        }
 
         if (confirm("이 내용으로 업로드 하시겠어요?")) {
-          uploadPost(title, content, tags).then((result) => {
+          uploadPost(title, content, tags, slug).then((result) => {
             if (result.success) {
               clearInputs();
-              window.location.href = `/blog/${result.id}`;
+              window.location.href = `/blog/${slug}`;
             } else {
               alert(
                 "포스트 업로드 중 오류가 발생했습니다. 다시 시도해 주세요.",
@@ -164,6 +221,7 @@
       // 임시 저장
       function saveDraft() {
         localStorage.setItem("draftTitle", inputElement.value);
+        localStorage.setItem("draftSlug", slugElement.value);
         localStorage.setItem("draftContent", textareaElement.value);
         localStorage.setItem("draftTags", JSON.stringify(tagList));
       }
@@ -171,6 +229,7 @@
       // 입력 필드와 태그를 초기화
       function clearInputs() {
         inputElement.value = "";
+        slugElement.value = "";
         textareaElement.value = "";
         titleElement.innerHTML = "";
         resultElement.innerHTML = "";
@@ -179,8 +238,9 @@
           tagWrapperElement.removeChild(tagWrapperElement.firstChild);
         }
         localStorage.removeItem("draftTitle");
-        localStorage.removeItem("draftContent");
         localStorage.removeItem("draftTags");
+        localStorage.removeItem("draftSlug");
+        localStorage.removeItem("draftContent");
       }
 
       // 이미지 드롭 이벤트 처리
@@ -232,6 +292,14 @@
         tagInputElement.addEventListener("keyup", handleTagInput);
       }
 
+      if (textareaElement) {
+        textareaElement.addEventListener(
+          "keyup",
+          async () =>
+            await markedWriteContent(textareaElement.value, resultElement),
+        );
+      }
+
       const clickUpload = document.querySelector(
         ".btn-primary",
       ) as HTMLButtonElement;
@@ -244,12 +312,6 @@
 
       const btnSub = document.querySelector(".btn-sub") as HTMLButtonElement;
       btnSub.addEventListener("click", handleSubClick);
-
-      document
-        .getElementById("testInsertImage")
-        ?.addEventListener("click", () => {
-          insertImageToMarkdown("https://example.com/test-image.jpg");
-        });
 
       // 드롭 이벤트 리스너 등록
       textareaElement.addEventListener("drop", handleDrop);

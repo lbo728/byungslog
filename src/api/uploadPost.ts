@@ -1,13 +1,15 @@
+// uploadPosts.ts
 import { supabase } from "../lib/supabase";
 
-async function uploadPost(
+export default async function uploadPost(
   title: string,
   content: string,
   tags: string[],
+  slug: string,
 ): Promise<{ success: boolean; id?: string }> {
   const { data, error } = await supabase
     .from("posts")
-    .insert([{ title, content, tags }])
+    .insert([{ title, content, tags, slug }])
     .select("id")
     .single();
 
@@ -24,5 +26,3 @@ async function uploadPost(
     };
   }
 }
-
-export default uploadPost;

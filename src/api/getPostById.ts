@@ -1,10 +1,10 @@
 import { supabase } from "../lib/supabase";
 
-export async function getPostById(id: string) {
+export async function getPostById(slug: string) {
   const { data, error } = await supabase
     .from("posts")
     .select("*")
-    .eq("id", id)
+    .eq("slug", slug)
     .single();
 
   if (error) {

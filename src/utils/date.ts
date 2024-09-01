@@ -5,5 +5,5 @@ export function formatPubDate(pubDate: string): string {
   var month = date.getMonth() + 1;
   var day = date.getDate();
 
-  return year + '년 ' + month + '월 ' + day + '일';
+  return year + "년 " + month + "월 " + day + "일";
 }

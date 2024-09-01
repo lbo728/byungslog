@@ -4,9 +4,6 @@ import { getPosts } from "../api/getPosts";
 
 const latestPosts = await getPosts();
 
-console.log("latestPosts", latestPosts);
-
-
 const pageTitle: string = "All Posts";
 ---
 
@@ -18,7 +15,7 @@ const pageTitle: string = "All Posts";
         {
           latestPosts.map((post) => (
             <li>
-              <a href={`/blog/${post.id}`}>{post.title}</a>
+              <a href={`/blog/${post.slug}`}>{post.title}</a>
             </li>
           ))
         }

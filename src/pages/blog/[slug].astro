@@ -1,24 +1,25 @@
 ---
 import BaseLayout from "../../layout/BaseLayout.astro";
+//
 import { getPostById } from "../../api/getPostById";
 import { getPosts } from "../../api/getPosts";
-import { Marked } from "marked";
-
-const marked = new Marked();
+//
+import { markedReadContent } from "../../utils/marked";
+//
 
 export const getStaticPaths = async () => {
   const posts = await getPosts();
 
   return posts.map((post) => ({
-    params: { id: post.id },
+    params: { slug: post.slug },
   }));
 };
 
-const { id } = Astro.params;
-const post = await getPostById(id);
+const { slug } = Astro.params;
+const post = await getPostById(slug);
 const pageTitle = post ? post.title : "Post Not Found";
 
-const parsedContent = post ? marked.parse(post.content) : "";
+const parsedContent = post ? markedReadContent(post.content) : "";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
