@@ -2,6 +2,7 @@
 import BaseLayout from "../layout/BaseLayout.astro";
 import { getPosts } from "../api/getPosts";
 import { formatDate } from "src/utils/date";
+import { calculateReadingTime } from "src/utils/readingTime";
 
 const posts = await getPosts();
 
@@ -21,7 +22,13 @@ const pageTitle: string = "All Posts";
               <div class="tag">{tag}</div>
             ))}
           </div>
-          <div class="created-at">{formatDate(post.created_at)}</div>
+          <div class="time-info">
+            <div class="created-at">{formatDate(post.created_at)}</div>
+            <div class="bullet">•</div>
+            <div class="reading-time">
+              {calculateReadingTime(post.content)} min read
+            </div>
+          </div>
         </a>
       ))
     }
@@ -56,6 +63,15 @@ const pageTitle: string = "All Posts";
       &:hover {
         background-color: #242424;
         border: 1px solid #b2b2b2;
+      }
+    }
+
+    .time-info {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      .created-at {
+        font-style: italic;
       }
     }
 

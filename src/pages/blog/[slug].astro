@@ -6,6 +6,8 @@ import { getPostById } from "../../api/getPostById";
 import { getPosts } from "../../api/getPosts";
 //
 import { markedReadContent } from "../../utils/marked";
+import { formatDate } from "../../utils/date";
+import { calculateReadingTime } from "../../utils/readingTime";
 //
 
 export const getStaticPaths = async () => {
@@ -23,32 +25,84 @@ const pageTitle = post ? post.title : "Post Not Found";
 const parsedContent = post ? markedReadContent(post.content) : "";
 ---
 
-<BaseLayout pageTitle={pageTitle}>
-  {
-    post ? (
-      <div class="body">
-        <div class="tags">
-          Tags: {post.tags ? post.tags.join(", ") : "No tags"}
+<BaseLayout>
+  <!-- <BaseLayout pageTitle={pageTitle}> -->
+  <div class="post-detail">
+    <div class="info">
+      <div class="title">
+        {post.title}
+      </div>
+      <div class="tags">
+        {post.tags.map((tag: string) => <div class="tag">{tag}</div>)}
+      </div>
+      <div class="time-info">
+        <div class="created-at">{formatDate(post.created_at)}</div>
+        <div class="bullet">•</div>
+        <div class="reading-time">
+          {calculateReadingTime(post.content)} min read
         </div>
-        <Fragment class="content" set:html={parsedContent} />
       </div>
-    ) : (
-      <div>
-        <h1>Post Not Found</h1>
-        <p>The post you are looking for does not exist.</p>
-      </div>
-    )
-  }
+    </div>
+    <!-- <div class="divider"></div> -->
+
+    <div class="content" set:html={parsedContent} />
+  </div>
 </BaseLayout>
 
 <style>
-  .body {
+  .post-detail {
     max-width: 800px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    margin-top: 48px;
   }
 
-  .tags {
-    margin-top: 20px;
-    font-style: italic;
+  .title {
+    font-size: 40px;
+    font-weight: 700;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    /* margin-bottom: 48px; */
+
+    .tags {
+      display: flex;
+      gap: 8px;
+
+      .tag {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 4px 8px;
+        background-color: #525252;
+        border-radius: 100px;
+        font-size: 14px;
+      }
+    }
+
+    .time-info {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      .created-at {
+        font-style: italic;
+      }
+    }
+  }
+
+  .divider {
+    width: 100%;
+    height: 1px;
+    background-color: #525252;
+  }
+
+  .content {
+    /* display: flex;
+    flex-direction: column; */
   }
 </style>
