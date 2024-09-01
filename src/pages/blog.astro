@@ -1,53 +1,77 @@
 ---
 import BaseLayout from "../layout/BaseLayout.astro";
 import { getPosts } from "../api/getPosts";
+import { formatDate } from "src/utils/date";
 
-const latestPosts = await getPosts();
+const posts = await getPosts();
 
 const pageTitle: string = "All Posts";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-  <div class="new-post-list">
-    <div class="title">
-      Latest Posts:
-      <ul>
-        {
-          latestPosts.map((post) => (
-            <li>
-              <a href={`/blog/${post.slug}`}>{post.title}</a>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
+  <div class="total">Total: {posts.length}</div>
+  <div class="post-list">
+    {
+      posts.map((post) => (
+        <a href={`/blog/${post.slug}`} class="post-item">
+          <div class="thumb" />
+          <div class="title">{post.title}</div>
+          <div class="tags">
+            {post.tags.map((tag: string) => (
+              <div class="tag">{tag}</div>
+            ))}
+          </div>
+          <div class="created-at">{formatDate(post.created_at)}</div>
+        </a>
+      ))
+    }
   </div>
 </BaseLayout>
 
 <style>
-  .new-post-list {
-    margin-top: 40px;
+  .total {
+    font-size: 16px;
   }
+  .post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    margin-top: 48px;
 
-  .title {
-    margin-bottom: 20px;
-  }
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+    }
 
-  .title ul {
-    list-style-type: none;
-    padding: 0;
-  }
+    .post-item {
+      text-decoration: none;
+      color: white;
+      display: flex;
+      padding: 24px;
+      border-radius: 8px;
+      border: 1px solid #fcfcfc;
+      flex-direction: column;
+      gap: 16px;
 
-  .title li {
-    margin-bottom: 10px;
-  }
+      &:hover {
+        background-color: #242424;
+        border: 1px solid #b2b2b2;
+      }
+    }
 
-  .title a {
-    text-decoration: none;
-    color: #0070f3;
-  }
+    .tags {
+      display: flex;
+      gap: 8px;
 
-  .title a:hover {
-    text-decoration: underline;
+      .tag {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 4px 8px;
+        background-color: #525252;
+        border-radius: 100px;
+        font-size: 14px;
+      }
+    }
   }
 </style>
