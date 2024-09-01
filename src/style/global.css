@@ -1,24 +1,5 @@
-/* 다크 모드 */
-
-html.dark {
-  background-color: #191919;
-  color: #fff;
-}
-
-.dark .nav-links a {
-  color: #fff;
-}
-
-.dark a {
-  color: #a78af9;
-}
-
-.dark li {
-  color: white;
-}
-
-.dark label {
-  color: #ffffff;
+* {
+  box-sizing: border-box;
 }
 
 html {
@@ -42,7 +23,6 @@ button {
   cursor: pointer;
 }
 
-/* 코드 블럭 */
 code {
   line-height: normal;
   background: rgba(135, 131, 120, 0.15);
@@ -50,10 +30,6 @@ code {
   border-radius: 4px;
   font-size: 85%;
   padding: 0.2em 0.4em;
-}
-
-* {
-  box-sizing: border-box;
 }
 
 a {
@@ -69,19 +45,17 @@ h1 {
   font-size: 2.5rem;
 }
 
-/* nav 스타일 */
-
 .hamburger {
   padding-right: 20px;
   cursor: pointer;
-}
 
-.hamburger .line {
-  display: block;
-  width: 40px;
-  height: 5px;
-  margin-bottom: 10px;
-  background-color: #6740d4;
+  .line {
+    display: block;
+    width: 40px;
+    height: 5px;
+    margin-bottom: 10px;
+    background-color: #6740d4;
+  }
 }
 
 .nav-links {
@@ -89,18 +63,18 @@ h1 {
   background-color: #6740d4;
   display: none;
   margin: 0;
-}
 
-.nav-links a {
-  text-align: center;
-  text-decoration: none;
-  font-size: 1.2rem;
-  font-weight: 500;
-}
+  a {
+    text-align: center;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 500;
 
-.nav-links a:hover,
-.nav-links a:focus {
-  color: #ff9776;
+    &:hover,
+    &:focus {
+      color: #6740d4;
+    }
+  }
 }
 
 .expanded {
@@ -114,17 +88,42 @@ h1 {
   }
 }
 
+/* Dark 테마를 디폴트로 */
+/* html.dark { */
+html {
+  background-color: #191919;
+  color: #fff;
+
+  .nav-links {
+    a {
+      color: #a78af9;
+
+      label {
+        color: #ffffff;
+      }
+
+      &:hover label {
+        color: #6740d4; /* label의 색상 변경 */
+      }
+    }
+
+    li {
+      color: white;
+    }
+  }
+}
+
 @media screen and (min-width: 636px) {
   .nav-links {
     display: block;
     position: static;
     width: auto;
     background: none;
-  }
 
-  .nav-links a {
-    display: inline-block;
-    padding: 15px 20px;
+    a {
+      display: inline-block;
+      padding: 15px 20px;
+    }
   }
 
   .hamburger {
