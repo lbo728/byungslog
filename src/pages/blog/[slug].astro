@@ -20,7 +20,7 @@ export const getStaticPaths = async () => {
 
 const { slug } = Astro.params;
 const post = await getPostById(slug);
-const pageTitle = post ? post.title : "Post Not Found";
+// const pageTitle = post ? post.title : "Post Not Found";
 
 const parsedContent = post ? markedReadContent(post.content) : "";
 ---
