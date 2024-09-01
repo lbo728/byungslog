@@ -28,7 +28,7 @@
 
         <div class="button-nav">
           <div class="btn-previous">
-            <img src="/icon-arrow-back.svg" alt="left icon" />
+            <img src="/icon-arrow-back-dark.svg" alt="left icon" />
             <span>나가기</span>
           </div>
           <div class="btn-wrapper">
@@ -323,8 +323,12 @@
 </html>
 
 <style>
+  html {
+    background-color: #191919;
+  }
   * {
     box-sizing: border-box;
+    color: #ffffff;
   }
 
   p {
@@ -349,14 +353,16 @@
     position: relative;
     flex-direction: column;
     flex: 1 1 0%;
-    background-color: white;
-    border-right: 1px solid #ccc;
+    /* border-right: 1px solid #ccc; */
+    border-right: 1px solid #424242;
     padding-bottom: 80px;
-    background-color: #f6f6f6;
+    /* background-color: #f6f6f6; */
+    background-color: #242424;
   }
 
   .button-nav {
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
+    background-color: #363636;
     box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.04);
     display: flex;
     width: 100%;
@@ -384,7 +390,8 @@
       }
 
       &:hover {
-        background-color: #f2f2f2;
+        /* background-color: #f2f2f2; */
+        background-color: #5a5a5a;
       }
     }
 
@@ -421,7 +428,8 @@
       cursor: pointer;
 
       &:hover {
-        background-color: #f2f2f2;
+        /* background-color: #f2f2f2; */
+        background-color: #5a5a5a;
       }
     }
   }
@@ -429,9 +437,15 @@
     border: none;
     resize: none;
     outline: none;
-    background-color: #f6f6f6;
+    /* background-color: #f6f6f6; */
+    background-color: #242424;
 
     padding: 20px;
+
+    &::placeholder {
+      color: #a2a2a2; /* 원하는 색상으로 변경 */
+      opacity: 1; /* 기본적으로 투명도가 0.7로 설정되어 있어서 명확하게 보이려면 1로 설정 */
+    }
   }
 
   .title {
@@ -453,9 +467,16 @@
       align-items: center;
       border-radius: 100px;
       padding: 12px;
-      background: #e2e2e2;
-      color: #8b95a1;
+      padding-left: 16px;
+      /* background: #e2e2e2;
+      color: #8b95a1; */
+      background-color: #525252;
+      color: #fcfcfc;
       cursor: pointer;
+
+      &:hover {
+        background-color: #626262;
+      }
     }
 
     .input {
@@ -469,10 +490,16 @@
     border: none;
     resize: none;
     outline: none;
-    background-color: #f6f6f6;
+    /* background-color: #f6f6f6; */
+    background-color: #242424;
     font-size: 16px;
     font-family: "Monaco", courier, monospace;
     padding: 20px;
+
+    &::placeholder {
+      color: #a2a2a2; /* 원하는 색상으로 변경 */
+      opacity: 1; /* 기본적으로 투명도가 0.7로 설정되어 있어서 명확하게 보이려면 1로 설정 */
+    }
   }
 
   .preview {
@@ -491,11 +518,11 @@
   #result {
     code {
       line-height: normal;
-      background: rgba(135, 131, 120, 0.15);
+      background: rgba(0, 0, 0, 0.15);
       color: #eb5757;
-      border-radius: 4px;
-      font-size: 85%;
-      padding: 0.2em 0.4em;
+      border-radius: 8px;
+      font-size: 16px;
+      padding: 4px;
     }
 
     a {
