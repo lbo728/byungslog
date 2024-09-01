@@ -1,5 +1,5 @@
 ---
-
+import "../style/markdown.css";
 ---
 
 <html lang="en" transition:animate="none">
@@ -448,6 +448,10 @@
     }
   }
 
+  .slug {
+    font-size: 16px;
+  }
+
   .title {
     font-weight: 700;
     font-size: 40px;
@@ -466,8 +470,8 @@
       gap: 4px;
       align-items: center;
       border-radius: 100px;
-      padding: 12px;
-      padding-left: 16px;
+      padding: 8px;
+      padding-left: 12px;
       /* background: #e2e2e2;
       color: #8b95a1; */
       background-color: #525252;
@@ -516,7 +520,7 @@
     font-weight: 700;
   }
   #result {
-    code {
+    /* code {
       line-height: normal;
       background: rgba(0, 0, 0, 0.15);
       color: #eb5757;
@@ -531,6 +535,6 @@
       &:hover {
         text-decoration: underline;
       }
-    }
+    } */
   }
 </style>

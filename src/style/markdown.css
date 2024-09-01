@@ -1,0 +1,16 @@
+code {
+  line-height: normal;
+  background-color: #242424;
+  color: #eb5757;
+  border-radius: 8px;
+  font-size: 16px;
+  padding: 4px;
+}
+
+a {
+  text-decoration-line: none;
+  color: #8b68ec;
+  &:hover {
+    text-decoration: underline;
+  }
+}
