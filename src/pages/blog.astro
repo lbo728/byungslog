@@ -1,8 +1,8 @@
 ---
 import BaseLayout from "../layout/BaseLayout.astro";
 import { getPosts } from "../api/getPosts";
-import { formatDate } from "src/utils/date";
-import { calculateReadingTime } from "src/utils/readingTime";
+import { formatDate } from "../utils/date";
+import { calculateReadingTime } from "../utils/readingTime";
 
 const posts = await getPosts();
 

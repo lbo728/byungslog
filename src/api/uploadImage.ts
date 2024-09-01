@@ -1,4 +1,4 @@
-import { generateSafeFileName } from "src/utils/fileName";
+import { generateSafeFileName } from "../utils/fileName";
 import { supabase } from "../lib/supabase";
 
 export default async function uploadImage(file: File): Promise<string | null> {
