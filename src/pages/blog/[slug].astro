@@ -8,7 +8,6 @@ import { getPosts } from "../../api/getPosts";
 import { markedReadContent } from "../../utils/marked";
 import { formatDate } from "../../utils/date";
 import { calculateReadingTime } from "../../utils/readingTime";
-//
 
 export const getStaticPaths = async () => {
   const posts = await getPosts();
