@@ -8,7 +8,7 @@ export default defineConfig({
   site: "https://byungsker.netlify.app/",
   prefetch: {
     prefetchAll: true,
-    defaultStrategy: "tap",
+    // defaultStrategy: "tap",
   },
   integrations: [preact()],
   output: "hybrid",
