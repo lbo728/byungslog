@@ -1,7 +1,7 @@
 export const prerender = false;
 
 import type { APIContext } from "astro";
-import getPosts from "src/service/getPosts";
+import getPosts from "../../service/getPosts";
 
 export async function GET({ params }: APIContext) {
   const tag = params.tag;
@@ -9,7 +9,7 @@ export async function GET({ params }: APIContext) {
   try {
     const posts = await getPosts();
 
-    const fillterdPosts = posts.filter((post) => post.tags.includes(tag));
+    const fillterdPosts = posts.filter((post: any) => post.tags.includes(tag));
 
     if (!posts) {
       return new Response("Post not found", { status: 404 });
