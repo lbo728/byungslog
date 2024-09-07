@@ -1,6 +1,5 @@
 import type { APIContext } from "astro";
 import getPosts from "src/service/getPosts";
-import getTags from "src/service/getTags";
 
 export async function GET({ params }: APIContext) {
   const tag = params.tag;
