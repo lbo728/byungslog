@@ -1,20 +1,24 @@
 ---
+import { GET } from "../api/[tag]";
+
 import BaseLayout from "../../layout/BaseLayout.astro";
-import { getPosts } from "../../service/getPosts";
-import { getTags } from "../../service/getTags";
 
-export const getStaticPaths = async () => {
-  const uniqueTags = await getTags();
+export const prerender = false;
 
-  return uniqueTags.map((tag: string) => ({
-    params: { tag },
-  }));
-};
+const response = await GET(Astro);
+const { fillterdPosts } = await response.json();
 
-const { tag } = Astro.params;
+if (!response.ok) {
+  const errorText = await response.text();
+  console.error("Fetch error:", errorText);
+  throw new Error("Failed to fetch post");
+}
 
-const allPosts = await getPosts();
-const filteredPosts = allPosts.filter((post) => post.tags?.includes(tag));
+if (!fillterdPosts) {
+  throw new Error("Post not found");
+}
+
+const tag = Astro.params.tag;
 
 const pageTitle = `Tag > ${tag} `;
 ---
@@ -22,9 +26,9 @@ const pageTitle = `Tag > ${tag} `;
 <BaseLayout pageTitle={pageTitle}>
   <div class="tag-wrapper">
     {
-      filteredPosts.length > 0 ? (
+      fillterdPosts.length > 0 ? (
         <ul>
-          {filteredPosts.map((post) => (
+          {fillterdPosts.map((post: any) => (
             <li>
               <a href={`/blog/${post.id}`}>{post.title}</a>
             </li>
@@ -36,7 +40,6 @@ const pageTitle = `Tag > ${tag} `;
     }
   </div>
 </BaseLayout>
-
 <style>
   .tag-wrapper {
     max-width: 800px;

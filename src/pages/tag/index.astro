@@ -1,9 +1,20 @@
 ---
 import BaseLayout from "../../layout/BaseLayout.astro";
 
-import { getTags } from "../../service/getTags";
+let tags = [];
 
-const tags = await getTags();
+try {
+  const response = await fetch(`${Astro.url.origin}/api/tags`);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch posts: ${response.status}`);
+  }
+
+  const data = await response.json();
+  tags = data.tags;
+} catch (error) {
+  console.error(error);
+}
 
 const pageTitle: string = "Tags";
 ---
@@ -11,7 +22,7 @@ const pageTitle: string = "Tags";
 <BaseLayout pageTitle={pageTitle}>
   <div class="tag-wrapper">
     {
-      tags.map((tag) => (
+      tags.map((tag: any) => (
         <p class="tag">
           <a href={`/tag/${tag}`}>{tag}</a>
         </p>

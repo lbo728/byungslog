@@ -1,4 +1,3 @@
-// src/pages/api/posts.ts
 import getPosts from "../../service/getPosts";
 import type { Post } from "../../types/Post";
 
