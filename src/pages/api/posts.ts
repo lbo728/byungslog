@@ -1,6 +1,6 @@
 import { createHash } from "crypto";
 import getPosts from "../../service/getPosts";
-import type { Post } from "src/types/Post";
+import type { Post } from "../../types/Post";
 
 export async function GET() {
   const posts: Post[] = await getPosts();
