@@ -189,8 +189,8 @@ import "../style/markdown.css";
           uploadPost(title, content, tags, slug).then((result) => {
             if (result.success) {
               clearInputs();
-              // window.location.href = `/blog/${slug}`;
-              prefetch(`/blog/${slug}`);
+              prefetch(`/blog/${slug}`, { ignoreSlowConnection: true });
+              window.location.href = `/blog/${slug}`;
             } else {
               alert(
                 "포스트 업로드 중 오류가 발생했습니다. 다시 시도해 주세요.",
