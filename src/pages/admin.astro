@@ -49,6 +49,7 @@ import "../style/markdown.css";
       //
       import slugify from "../utils/slugify";
       import { markedWriteContent } from "../utils/marked";
+      import { prefetch } from "astro:prefetch";
 
       const textareaElement = document.getElementById(
         "textarea",
@@ -188,7 +189,8 @@ import "../style/markdown.css";
           uploadPost(title, content, tags, slug).then((result) => {
             if (result.success) {
               clearInputs();
-              window.location.href = `/blog/${slug}`;
+              // window.location.href = `/blog/${slug}`;
+              prefetch(`/blog/${slug}`);
             } else {
               alert(
                 "포스트 업로드 중 오류가 발생했습니다. 다시 시도해 주세요.",

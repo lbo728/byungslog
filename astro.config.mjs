@@ -7,7 +7,8 @@ import netlify from "@astrojs/netlify";
 export default defineConfig({
   site: "https://byungsker.netlify.app/",
   prefetch: {
-    prefetchAll: false,
+    prefetchAll: true,
+    defaultStrategy: "tap",
   },
   integrations: [preact()],
   output: "hybrid",
