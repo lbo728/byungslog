@@ -7,13 +7,16 @@ import BaseLayout from "../layout/BaseLayout.astro";
 //
 import { formatDate } from "../utils/date";
 import { calculateReadingTime } from "../utils/readingTime";
+import Loading from "@component/Loading.astro";
 
 const pageTitle: string = "All Posts";
 
 let posts: Post[] = [];
+let loading: boolean;
 
 try {
   // const response = await fetch(`${Astro.url.origin}/api/posts`);
+  loading = true;
   const response = await GET();
 
   if (!response.ok) {
@@ -24,9 +27,12 @@ try {
   posts = data.posts;
 } catch (error) {
   console.error(error);
+} finally {
+  loading = false;
 }
 ---
 
+{loading && <Loading />}
 <BaseLayout pageTitle={pageTitle}>
   <div class="total">Total: {posts.length}</div>
   <div class="post-list">
