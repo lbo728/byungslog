@@ -12,7 +12,7 @@ export default async function getPostById(slug: string) {
     return null;
   }
 
-  console.log("getPostByID data:", data);
+  // console.log("getPostByID data:", data);
 
   return data;
 }

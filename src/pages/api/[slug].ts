@@ -2,7 +2,7 @@ import type { APIContext } from "astro";
 import getPostById from "../../service/getPostById";
 
 export async function GET({ params }: APIContext) {
-  console.log("Received params:", params);
+  // console.log("Received params:", params);
   const slug = params.slug!;
   try {
     const post = await getPostById(slug);
