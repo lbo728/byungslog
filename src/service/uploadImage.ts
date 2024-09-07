@@ -17,7 +17,6 @@ export default async function uploadImage(file: File): Promise<string | null> {
   // 업로드된 파일의 공개 URL 가져오기
   const { data } = supabase.storage.from("images").getPublicUrl(safeFileName);
 
-  // 데이터가 null인 경우 처리
   if (!data) {
     console.error("Error getting public URL: Data is null");
     return null;

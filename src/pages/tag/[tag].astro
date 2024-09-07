@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../../layout/BaseLayout.astro";
-import { getPosts } from "../../api/getPosts";
-import { getTags } from "../../api/getTags";
+import { getPosts } from "../../service/getPosts";
+import { getTags } from "../../service/getTags";
 
 export const getStaticPaths = async () => {
   const uniqueTags = await getTags();

@@ -1,14 +1,29 @@
 ---
-import BaseLayout from "../layout/BaseLayout.astro";
+import type { Post } from "src/types/Post";
 //
-import { getPosts } from "../api/getPosts";
+import BaseLayout from "../layout/BaseLayout.astro";
 //
 import { formatDate } from "../utils/date";
 import { calculateReadingTime } from "../utils/readingTime";
 
-const posts = await getPosts();
-
 const pageTitle: string = "All Posts";
+
+let posts: Post[] = [];
+
+try {
+  const response = await fetch(`${Astro.url.origin}/api/posts`);
+
+  console.log("response:", response);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch posts: ${response.status}`);
+  }
+
+  const data = await response.json();
+  posts = data.posts;
+} catch (error) {
+  console.error(error);
+}
 ---
 
 <BaseLayout pageTitle={pageTitle}>

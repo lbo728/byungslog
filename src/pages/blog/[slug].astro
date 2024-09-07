@@ -1,53 +1,49 @@
 ---
-import BaseLayout from "../../layout/BaseLayout.astro";
+import { GET } from "../api/[slug]";
 
-//
-import { getPostById } from "../../api/getPostById";
-import { getPosts } from "../../api/getPosts";
+import BaseLayout from "../../layout/BaseLayout.astro";
 //
 import { markedReadContent } from "../../utils/marked";
 import { formatDate } from "../../utils/date";
 import { calculateReadingTime } from "../../utils/readingTime";
 
-export const getStaticPaths = async () => {
-  const posts = await getPosts();
+export const prerender = false;
 
-  return posts.map((post) => ({
-    params: { slug: post.slug },
-  }));
-};
+const response = await GET(Astro);
+const { post } = await response.json();
 
-const { slug } = Astro.params;
-const post = await getPostById(slug);
-// const pageTitle = post ? post.title : "Post Not Found";
+if (!response.ok) {
+  const errorText = await response.text();
+  console.error("Fetch error:", errorText);
+  throw new Error("Failed to fetch post");
+}
+
+if (!post) {
+  throw new Error("Post not found");
+}
 
 const parsedContent = post ? markedReadContent(post.content) : "";
 ---
 
-<BaseLayout>
-  <!-- <BaseLayout pageTitle={pageTitle}> -->
-  <div class="post-detail">
-    <div class="info">
-      <div class="title">
-        {post.title}
-      </div>
-      <div class="tags">
-        {post.tags.map((tag: string) => <div class="tag">{tag}</div>)}
-      </div>
-      <div class="time-info">
-        <div class="created-at">{formatDate(post.created_at)}</div>
-        <div class="bullet">•</div>
-        <div class="reading-time">
-          {calculateReadingTime(post.content)} min read
-        </div>
+<BaseLayout class="post-detail">
+  <div class="info">
+    <div class="title">
+      {post.title}
+    </div>
+    <div class="tags">
+      {post.tags.map((tag: string) => <div class="tag">{tag}</div>)}
+    </div>
+    <div class="time-info">
+      <div class="created-at">{formatDate(post.created_at)}</div>
+      <div class="bullet">•</div>
+      <div class="reading-time">
+        {calculateReadingTime(post.content)} min read
       </div>
     </div>
-    <!-- <div class="divider"></div> -->
-
-    <div class="content" set:html={parsedContent} />
   </div>
-</BaseLayout>
 
+  <div class="content" set:html={parsedContent} />
+</BaseLayout>
 <style>
   .post-detail {
     max-width: 800px;
@@ -67,7 +63,6 @@ const parsedContent = post ? markedReadContent(post.content) : "";
     display: flex;
     flex-direction: column;
     gap: 24px;
-    /* margin-bottom: 48px; */
 
     .tags {
       display: flex;

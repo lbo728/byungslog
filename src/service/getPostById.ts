@@ -1,6 +1,6 @@
 import { supabase } from "../lib/supabase";
 
-export async function getPostById(slug: string) {
+export default async function getPostById(slug: string) {
   const { data, error } = await supabase
     .from("posts")
     .select("*")
@@ -11,6 +11,8 @@ export async function getPostById(slug: string) {
     console.error("Error fetching post:", error);
     return null;
   }
+
+  console.log("getPostByID data:", data);
 
   return data;
 }
