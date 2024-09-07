@@ -1,4 +1,6 @@
 ---
+import { GET } from "./api/posts";
+
 import type { Post } from "../types/Post";
 //
 import BaseLayout from "../layout/BaseLayout.astro";
@@ -11,7 +13,8 @@ const pageTitle: string = "All Posts";
 let posts: Post[] = [];
 
 try {
-  const response = await fetch(`${Astro.url.origin}/api/posts`);
+  // const response = await fetch(`${Astro.url.origin}/api/posts`);
+  const response = await GET();
 
   if (!response.ok) {
     throw new Error(`Failed to fetch posts: ${response.status}`);
