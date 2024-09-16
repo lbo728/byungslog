@@ -23,6 +23,51 @@ import Close from "./Icon/Close.astro";
 </div>
 
 <style>
+  .nav-links {
+    display: flex;
+    width: 100%;
+    margin: 0;
+    justify-content: end;
+
+    a {
+      text-align: center;
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: 500;
+
+      &:hover,
+      &:focus {
+        color: #6740d4;
+      }
+    }
+  }
+
+  .expanded {
+    display: flex;
+    justify-content: start;
+    left: 0;
+    top: 0px;
+    position: absolute;
+    flex-direction: column;
+    width: 240px;
+    height: 100dvh;
+    z-index: 2;
+    padding: 16px;
+    background-color: #242424;
+
+    & .close-wrapper {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      padding-bottom: 24px;
+    }
+
+    & a {
+      display: flex;
+      padding: 8px 0;
+      align-items: start;
+    }
+  }
   span {
     cursor: pointer;
   }
@@ -30,6 +75,15 @@ import Close from "./Icon/Close.astro";
   @media screen and (min-width: 636px) {
     .close-wrapper {
       display: none;
+    }
+  }
+
+  @media screen and (max-width: 636px) {
+    .nav-links {
+      display: none;
+    }
+    .expanded {
+      display: flex;
     }
   }
 </style>

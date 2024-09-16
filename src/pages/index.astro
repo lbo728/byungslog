@@ -1,6 +1,123 @@
 ---
+import { GET } from "./api/posts";
+
+import type { Post } from "../types/Post";
+//
 import BaseLayout from "../layout/BaseLayout.astro";
-const pageTitle = "병스커 블로그";
+//
+import { formatDate } from "../utils/date";
+import { calculateReadingTime } from "../utils/readingTime";
+import Loading from "../component/Loading.astro";
+
+export const prerender = false;
+
+const pageTitle: string = "All Posts";
+
+let posts: Post[] = [];
+// let loading: boolean;
+
+try {
+  // loading = true;
+  const response = await GET();
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch posts: ${response.status}`);
+  }
+
+  const data = await response.json();
+  posts = data.posts;
+} catch (error) {
+  console.error(error);
+} finally {
+  // loading = false;
+}
 ---
 
-<BaseLayout pageTitle={pageTitle} />
+<!-- {loading && <Loading />} -->
+<BaseLayout>
+  <div class="total">Total: {posts.length}</div>
+  <div class="post-list">
+    {
+      posts.map((post) => (
+        <a
+          href={`/blog/${post.slug}`}
+          data-astro-prefetch="load"
+          class="post-item"
+        >
+          <div class="thumb" />
+          <div class="title">{post.title}</div>
+          <div class="tags">
+            {post.tags.map((tag: string) => (
+              <div class="tag">{tag}</div>
+            ))}
+          </div>
+          <div class="time-info">
+            <div class="created-at">{formatDate(post.created_at)}</div>
+            <div class="bullet">•</div>
+            <div class="reading-time">
+              {calculateReadingTime(post.content)} min read
+            </div>
+          </div>
+        </a>
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .total {
+    font-size: 16px;
+    margin-top: 24px;
+  }
+  .post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    margin-top: 16px;
+
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .post-item {
+      text-decoration: none;
+      color: white;
+      display: flex;
+      padding: 24px;
+      border-radius: 8px;
+      border: 1px solid #fcfcfc;
+      flex-direction: column;
+      gap: 16px;
+
+      &:hover {
+        background-color: #242424;
+        border: 1px solid #b2b2b2;
+      }
+    }
+
+    .time-info {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      .created-at {
+        font-style: italic;
+      }
+    }
+
+    .tags {
+      display: flex;
+      gap: 8px;
+
+      .tag {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 4px 8px;
+        background-color: #525252;
+        border-radius: 100px;
+        font-size: 14px;
+      }
+    }
+  }
+</style>
