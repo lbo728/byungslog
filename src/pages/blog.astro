@@ -38,7 +38,11 @@ try {
   <div class="post-list">
     {
       posts.map((post) => (
-        <a href={`/blog/${post.slug}`} class="post-item">
+        <a
+          href={`/blog/${post.slug}`}
+          data-astro-prefetch="load"
+          class="post-item"
+        >
           <div class="thumb" />
           <div class="title">{post.title}</div>
           <div class="tags">
