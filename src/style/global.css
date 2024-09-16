@@ -11,6 +11,7 @@ body {
   margin: 0 auto;
   width: 100%;
   max-width: 80ch;
+  min-height: 100dvh;
   padding: 1rem;
   line-height: 1.5;
 }
@@ -43,19 +44,6 @@ a {
 h1 {
   margin: 1rem 0;
   font-size: 2.5rem;
-}
-
-.hamburger {
-  padding-right: 20px;
-  cursor: pointer;
-
-  .line {
-    display: block;
-    width: 40px;
-    height: 5px;
-    margin-bottom: 10px;
-    background-color: #6740d4;
-  }
 }
 
 .nav-links {
@@ -124,9 +112,5 @@ html {
       display: inline-block;
       padding: 15px 20px;
     }
-  }
-
-  .hamburger {
-    display: none;
   }
 }

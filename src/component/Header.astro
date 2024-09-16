@@ -1,60 +1,53 @@
 ---
 import Hamburger from "./Hamburger.astro";
+import Logo from "./Logo.astro";
 import Navigation from "./Navigation.astro";
-// import ThemeIcon from "./ThemeIcon.astro";
 ---
 
 <header>
   <nav>
     <div class="nav-bar">
       <Hamburger />
-
-      <div class="logo">
-        <a href="/">
-          <img src="/logo-byungsker-astro.png" alt="logo" height="32" />
-        </a>
-      </div>
-      <div class="logo-dark">
-        <a href="/">
-          <img src="/logo-byungsker-astro.png" alt="logo" height="32" />
-        </a>
+      <div class="logo-wrapper">
+        <Logo />
       </div>
       <div class="nav-bar-right">
         <Navigation />
-        <!-- <ThemeIcon /> -->
       </div>
     </div>
-
-    <style>
-      .nav-bar {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-      }
-
-      .nav-bar-right {
-        display: flex;
-        flex-direction: row;
-        justify-content: end;
-        width: 100%;
-      }
-
-      .logo {
-        display: flex;
-        align-items: center;
-      }
-
-      .logo-dark {
-        display: none;
-      }
-
-      :global(.dark) .logo {
-        display: none;
-      }
-      :global(.dark) .logo-dark {
-        display: flex;
-        align-items: center;
-      }
-    </style>
   </nav>
 </header>
+
+<style>
+  .nav-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .nav-bar-right {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    width: 100%;
+  }
+
+  .logo-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  :global(.dark) .logo {
+    display: none;
+  }
+  :global(.dark) .logo-dark {
+    display: flex;
+    align-items: center;
+  }
+
+  @media screen and (max-width: 636px) {
+    .nav-bar-right {
+      width: 40px;
+    }
+  }
+</style>

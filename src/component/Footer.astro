@@ -3,14 +3,13 @@ import "./Social.astro";
 // import Social from "./Social.astro";
 ---
 
-<style>
+<!-- <style>
   footer {
     display: flex;
     gap: 1rem;
     margin-top: 2rem;
   }
-</style>
-
+</style> -->
 <footer>
   <!-- <Social platform="Twitter" username="byungsker" />
   <Social platform="Github" username="lbo728" />
@@ -73,6 +72,15 @@ import "./Social.astro";
 </footer>
 
 <style>
+  footer {
+    width: 100%;
+    display: flex;
+    /* bottom: 0; */
+    /* position: absolute; */
+    /* padding-right: 16px; */
+    /* gap: 1rem; */
+    /* margin-top: 2rem; */
+  }
   .footer {
     display: flex;
     width: 100%;
@@ -88,5 +96,11 @@ import "./Social.astro";
   .sns-wrap {
     display: flex;
     gap: 16px;
+    align-items: center;
+
+    a {
+      display: flex;
+      align-items: center;
+    }
   }
 </style>
