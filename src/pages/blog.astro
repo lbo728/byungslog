@@ -9,13 +9,14 @@ import { formatDate } from "../utils/date";
 import { calculateReadingTime } from "../utils/readingTime";
 import Loading from "../component/Loading.astro";
 
+export const prerender = false;
+
 const pageTitle: string = "All Posts";
 
 let posts: Post[] = [];
 let loading: boolean;
 
 try {
-  // const response = await fetch(`${Astro.url.origin}/api/posts`);
   loading = true;
   const response = await GET();
 
