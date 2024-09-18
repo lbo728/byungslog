@@ -6,7 +6,7 @@ import Footer from "../component/Footer.astro";
 import "../style/global.css";
 import "../style/markdown.css";
 
-const { pageTitle } = Astro.props;
+// const { pageTitle } = Astro.props;
 ---
 
 <html lang="en" transition:animate="none">
@@ -15,13 +15,17 @@ const { pageTitle } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>{pageTitle}</title>
+    <!-- <title>{pageTitle}</title> -->
     <ViewTransitions />
   </head>
   <body>
     <Header />
-    <h1 transition:animate="none">{pageTitle}</h1>
-    <slot transition:animate="none" />
+    <!-- <h1 transition:animate="none">{pageTitle}</h1> -->
+    <!-- <h1 transition:animate="none"></h1> -->
+    <div class="layout-body">
+      <slot transition:animate="none" />
+    </div>
+
     <Footer />
     <script>
       import "../script/menu.js";
