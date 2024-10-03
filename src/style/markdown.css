@@ -59,6 +59,21 @@ h6 {
   unicode-bidi: isolate;
 }
 
+blockquote {
+  border-left: 2px solid #ffffff;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  background: #1e1e1e;
+  padding: 1rem 1rem 1rem 2rem;
+  color: #ececec;
+  display: flex;
+  white-space: pre-wrap;
+
+  p {
+    margin: 0;
+  }
+}
+
 code {
   line-height: normal;
   background-color: #242424;
