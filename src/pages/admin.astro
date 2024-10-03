@@ -39,7 +39,7 @@ import "../style/markdown.css";
       </div>
 
       <div class="preview">
-        <div id="title"></div>
+        <h1 id="title"></h1>
         <div id="result"></div>
       </div>
     </div>
@@ -82,7 +82,7 @@ import "../style/markdown.css";
         const savedTags = localStorage.getItem("draftTags");
 
         if (savedTitle) {
-          await markedWriteContent(savedTitle, titleElement);
+          titleElement.innerHTML = savedTitle;
         }
         if (savedContent) {
           await markedWriteContent(savedContent, resultElement);
@@ -293,8 +293,7 @@ import "../style/markdown.css";
       if (inputElement) {
         inputElement.addEventListener(
           "keyup",
-          async () =>
-            await markedWriteContent(inputElement.value, titleElement),
+          async () => (titleElement.innerHTML = inputElement.value),
         );
       }
       if (textareaElement) {
