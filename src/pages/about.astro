@@ -32,32 +32,8 @@ const finished = true;
 const goal = 3;
 ---
 
-<BaseLayout pageTitle={pageTitle}>
-  <p>Here are a few about me:</p>
-  <ul>
-    <li>이름 {identity.firstName}.</li>
-    <li>
-      I live in {identity.country} and I work as a {identity.occupation}.
-    </li>
-    {
-      identity.hobbies.length >= 2 && (
-        <li>
-          Two of my hobbies are: {identity.hobbies[0]} and {identity.hobbies[1]}
-        </li>
-      )
-    }
-  </ul>
-  <p>My skills are:</p>
-  <ul>
-    {skills.map((skill) => <li class="skill">{skill}</li>)}
-  </ul>
-  {happy && <p>I am happy to be learning Astro!</p>}
-  {finished && <p>I finished this tutorial!</p>}
-  {
-    goal === 3 ? (
-      <p>My goal is to finish in 3 days.</p>
-    ) : (
-      <p>My goal is not 3 days.</p>
-    )
-  }
+<BaseLayout>
+  <p>프로덕트 디자인을 하다 현재는 개발을 하고 있습니다.</p>
+  <p>개발과 디자인, 비즈니스, 글쓰기에 대한 글을 쓰고 있어요.</p>
+  <p>링크드인 | 스레드 | X</p>
 </BaseLayout>
