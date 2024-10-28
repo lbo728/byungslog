@@ -1,4 +1,5 @@
 ---
+import ThumbnailModal from "@component/ThumbnailModal.astro";
 import "../style/markdown.css";
 ---
 
@@ -33,7 +34,7 @@ import "../style/markdown.css";
           </div>
           <div class="btn-wrapper">
             <div class="btn-sub">임시 저장</div>
-            <div class="btn-primary">업로드</div>
+            <div id="uploadButton" class="btn-primary">업로드</div>
           </div>
         </div>
       </div>
@@ -42,7 +43,9 @@ import "../style/markdown.css";
         <h1 id="title"></h1>
         <div id="result"></div>
       </div>
+      <ThumbnailModal />
     </div>
+
     <script>
       import uploadPost from "../service/uploadPost";
       import uploadImage from "../service/uploadImage";
