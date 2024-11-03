@@ -4,10 +4,9 @@ import type { APIContext } from "astro";
 import getPostById from "../../service/getPostById";
 
 export async function GET({ params }: APIContext) {
-  // console.log("Received params:", params);
-  const slug = params.slug!;
+  const id = params.id!;
   try {
-    const post = await getPostById(slug);
+    const post = await getPostById(id);
 
     if (!post) {
       return new Response("Post not found", { status: 404 });

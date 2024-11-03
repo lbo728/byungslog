@@ -29,26 +29,34 @@ if (user) {
   <body>
     <div class="admin-container">
       {
-        isUser ? (
-          <div>Welcome to the admin page</div>
-        ) : (
+        !isUser && (
           <div class="w-dvw h-dvh bg-black/20 absolute z-10 flex justify-center items-center">
             <div
               id="loginModal"
               class="flex flex-col  bg-blue-500 w-fit z-20 p-6 rounded-lg"
             >
               <h2 class="text-center">로그인 해주세요!</h2>
-              <div class=" flex flex-row gap-2">
-                <button id="loginCancelBtn" class="bg-red-300 p-4 rounded-lg">
-                  Cancel
-                </button>
-                <button
-                  id="loginConfirmBtn"
-                  class="bg-slate-700 p-4 rounded-lg"
-                >
-                  Log in with Supabase
-                </button>
-              </div>
+              <form
+                action="/api/auth/signin"
+                method="post"
+                class="flex flex-col gap-2"
+              >
+                <label for="email">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  class="text-white"
+                />
+                <label for="password">Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  class="text-white"
+                />
+                <button type="submit">Login</button>
+              </form>
             </div>
           </div>
         )
@@ -60,7 +68,7 @@ if (user) {
         <!-- <input class="slug" placeholder="영문 제목을 입력해주세요." /> -->
         <div class="tag-wrapper">
           <input
-            id="tagp-input"
+            id="tags-input"
             class="input"
             placeholder="태그를 입력해주세요"
           />
@@ -103,28 +111,28 @@ if (user) {
         "loginModal",
       ) as HTMLTextAreaElement;
 
-      const loginConfirmBtn = document.getElementById(
-        "loginConfirmBtn",
-      ) as HTMLTextAreaElement;
+      // const loginConfirmBtn = document.getElementById(
+      //   "loginConfirmBtn",
+      // ) as HTMLTextAreaElement;
 
-      const loginCancelBtn = document.getElementById(
-        "loginCancelBtn",
-      ) as HTMLTextAreaElement;
+      // const loginCancelBtn = document.getElementById(
+      //   "loginCancelBtn",
+      // ) as HTMLTextAreaElement;
 
-      loginConfirmBtn.addEventListener("click", async () => {
-        const { error } = await supabase.auth.signInWithOAuth({
-          provider: "github",
-        });
-        if (error) {
-          alert("Login failed");
-          return;
-        }
-        loginModal.style.display = "none";
-      });
+      // loginConfirmBtn.addEventListener("click", async () => {
+      //   const { error } = await supabase.auth.signInWithOAuth({
+      //     provider: "github",
+      //   });
+      //   if (error) {
+      //     alert("Login failed");
+      //     return;
+      //   }
+      //   loginModal.style.display = "none";
+      // });
 
-      loginCancelBtn.addEventListener("click", () => {
-        window.location.href = "/";
-      });
+      // loginCancelBtn.addEventListener("click", () => {
+      //   window.location.href = "/";
+      // });
 
       const textareaElement = document.getElementById(
         "textarea",
@@ -139,7 +147,7 @@ if (user) {
       const titleElement = document.getElementById("title") as HTMLDivElement;
 
       const tagInputElement = document.getElementById(
-        "tagp-input",
+        "tags-input",
       ) as HTMLInputElement;
 
       const tagWrapperElement = document.querySelector(
@@ -262,12 +270,9 @@ if (user) {
         }
 
         if (confirm("이 내용으로 업로드 하시겠어요?")) {
-          // uploadPost(title, content, tags, slug).then((result) => {
           uploadPost(title, content, tags).then((result) => {
             if (result.success && result.id) {
               clearInputs();
-              // prefetch(`/blog/${slug}`, { ignoreSlowConnection: true });
-              // window.location.href = `/blog/${slug}`;
               const id = result.id;
               prefetch(`/blog/${id}`, { ignoreSlowConnection: true });
               window.location.href = `/blog/${id}`;
