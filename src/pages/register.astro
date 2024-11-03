@@ -1,0 +1,17 @@
+---
+export const prerender = false;
+
+import BaseLayout from "@layout/BaseLayout.astro";
+---
+
+<BaseLayout title="Register">
+  <h1>Register</h1>
+  <p>Already have an account? <a href="/signin">Sign in</a></p>
+  <form action="/api/auth/register" method="post">
+    <label for="email">Email</label>
+    <input type="email" name="email" id="email" class="text-black" />
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" class="text-black" />
+    <button type="submit">Register</button>
+  </form>
+</BaseLayout>
