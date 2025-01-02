@@ -10,6 +10,5 @@ export default defineConfig({
     // defaultStrategy: "tap",
   },
   integrations: [preact(), tailwind()],
-  output: "hybrid",
   adapter: netlify(),
 });
