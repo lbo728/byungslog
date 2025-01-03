@@ -12,19 +12,19 @@ export const prerender = false;
 
 let posts: Post[] = [];
 
-try {
-  const response = await GET();
+// try {
+//   const response = await GET();
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch posts: ${response.status}`);
-  }
+//   if (!response.ok) {
+//     throw new Error(`Failed to fetch posts: ${response.status}`);
+//   }
 
-  const data = await response.json();
-  posts = data.posts;
-} catch (error) {
-  console.error(error);
-} finally {
-}
+//   const data = await response.json();
+//   posts = data.posts;
+// } catch (error) {
+//   console.error(error);
+// } finally {
+// }
 ---
 
 <BaseLayout>
