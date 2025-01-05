@@ -1,3 +1,20 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: #f1f5f9;
+  font-family: sans-serif;
+}
+
+body {
+  width: 100%;
+  min-height: 100dvh;
+  line-height: 1.5;
+
+  margin: 0;
+}
+
 h1 {
   font-size: 2.5rem;
   display: block;
@@ -83,23 +100,6 @@ blockquote {
   p {
     margin: 0;
   }
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  background-color: #f1f5f9;
-  font-family: sans-serif;
-}
-
-body {
-  width: 100%;
-  min-height: 100dvh;
-  line-height: 1.5;
-
-  margin: 0;
 }
 
 label {
