@@ -1,4 +1,4 @@
-// export const prerender = false;
+export const prerender = false;
 
 import type { APIContext } from "astro";
 import getPostById from "../../service/getPostById";
