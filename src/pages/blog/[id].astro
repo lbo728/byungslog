@@ -2,10 +2,7 @@
 import { GET } from "../api/[id]";
 
 import BaseLayout from "../../layout/BaseLayout.astro";
-//
 import { markedReadContent } from "../../utils/marked";
-import { formatDate } from "../../utils/date";
-import { calculateReadingTime } from "../../utils/readingTime";
 import PostDetail from "@component/PostDetail.astro";
 import Loading from "@component/Loading.astro";
 
@@ -27,25 +24,6 @@ if (!post) {
 const parsedContent = post ? markedReadContent(post.content) : "";
 ---
 
-<!-- <BaseLayout class="post-detail">
-  <div class="info">
-    <div class="title">
-      {post.title}
-    </div>
-    <div class="tags">
-      {post.tags.map((tag: string) => <div class="tag">{tag}</div>)}
-    </div>
-    <div class="time-info">
-      <div class="created-at">{formatDate(post.created_at)}</div>
-      <div class="bullet">•</div>
-      <div class="reading-time">
-        {calculateReadingTime(post.content)} min read
-      </div>
-    </div>
-  </div>
-
-  <div class="content" set:html={parsedContent} />
-</BaseLayout> -->
 <BaseLayout>
   <PostDetail post={post} parsedContent={parsedContent}>
     <Loading slot="fallback" />
