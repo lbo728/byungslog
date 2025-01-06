@@ -1,33 +1,17 @@
 ---
-import { GET } from "../api/[id]";
+import type { Post } from "../types/Post";
+import { formatDate } from "../utils/date";
+import { calculateReadingTime } from "../utils/readingTime";
 
-import BaseLayout from "../../layout/BaseLayout.astro";
-//
-import { markedReadContent } from "../../utils/marked";
-import { formatDate } from "../../utils/date";
-import { calculateReadingTime } from "../../utils/readingTime";
-import PostDetail from "@component/PostDetail.astro";
-import Loading from "@component/Loading.astro";
-
-export const prerender = false;
-
-const response = await GET(Astro);
-const { post } = await response.json();
-
-if (!response.ok) {
-  const errorText = await response.text();
-  console.error("Fetch error:", errorText);
-  throw new Error("Failed to fetch post");
+interface Props {
+  post: Post;
+  parsedContent: string | Promise<string>;
 }
 
-if (!post) {
-  throw new Error("Post not found");
-}
-
-const parsedContent = post ? markedReadContent(post.content) : "";
+const { post, parsedContent } = Astro.props;
 ---
 
-<!-- <BaseLayout class="post-detail">
+<div class="post-detail">
   <div class="info">
     <div class="title">
       {post.title}
@@ -45,12 +29,8 @@ const parsedContent = post ? markedReadContent(post.content) : "";
   </div>
 
   <div class="content" set:html={parsedContent} />
-</BaseLayout> -->
-<BaseLayout>
-  <PostDetail post={post} parsedContent={parsedContent}>
-    <Loading slot="fallback" />
-  </PostDetail>
-</BaseLayout>
+</div>
+
 <style>
   .post-detail {
     max-width: 800px;
@@ -95,11 +75,5 @@ const parsedContent = post ? markedReadContent(post.content) : "";
         font-style: italic;
       }
     }
-  }
-
-  .divider {
-    width: 100%;
-    height: 1px;
-    background-color: #525252;
   }
 </style>

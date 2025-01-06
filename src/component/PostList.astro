@@ -1,0 +1,42 @@
+---
+import { formatDate } from "src/utils/date";
+import type { Post } from "../types/Post";
+import { calculateReadingTime } from "src/utils/readingTime";
+
+interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
+---
+
+{
+  posts.length > 0 ? (
+    <>
+      {posts.map((post) => (
+        <a
+          href={`/blog/${post.id}`}
+          data-astro-prefetch="load"
+          class="post-item"
+        >
+          <div class="thumb" />
+          <div class="title">{post.title}</div>
+          <div class="tags">
+            {post.tags.map((tag: string) => (
+              <div class="tag">{tag}</div>
+            ))}
+          </div>
+          <div class="time-info">
+            <div class="created-at">{formatDate(post.created_at)}</div>
+            <div class="bullet">•</div>
+            <div class="reading-time">
+              {calculateReadingTime(post.content)} min read
+            </div>
+          </div>
+        </a>
+      ))}
+    </>
+  ) : (
+    <div>No posts available.</div>
+  )
+}
