@@ -1,7 +1,7 @@
 export const prerender = false;
 
 import type { APIContext } from "astro";
-import getPosts from "../../service/getPosts";
+import getPosts from "../../../service/getPosts";
 
 export async function GET({ params }: APIContext) {
   const tag = params.tag;

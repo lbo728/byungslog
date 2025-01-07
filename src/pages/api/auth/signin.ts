@@ -2,7 +2,7 @@ export const prerender = false;
 
 import type { APIRoute } from "astro";
 import type { Provider } from "@supabase/supabase-js";
-import { supabase } from "src/lib/supabase";
+import { supabase } from "../../../lib/supabase";
 
 // export const GET: APIRoute = async ({ request, redirect }) => {
 //   const url = new URL(request.url);

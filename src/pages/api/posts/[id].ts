@@ -1,7 +1,7 @@
 export const prerender = false;
 
 import type { APIContext } from "astro";
-import getPostById from "../../service/getPostById";
+import getPostById from "../../../service/getPostById";
 
 export async function GET({ params }: APIContext) {
   const id = params.id!;
