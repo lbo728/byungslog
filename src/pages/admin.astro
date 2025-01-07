@@ -1,7 +1,7 @@
 ---
 import ThumbnailModal from "@component/ThumbnailModal.astro";
 import "../style/markdown.css";
-import { supabase } from "src/lib/supabase";
+import { supabase } from "../lib/supabase";
 
 let isUser;
 
@@ -97,7 +97,7 @@ if (user) {
     </div>
 
     <script>
-      import { supabase } from "src/lib/supabase";
+      // import { supabase } from "src/lib/supabase";
 
       import uploadPost from "../service/uploadPost";
       import uploadImage from "../service/uploadImage";
