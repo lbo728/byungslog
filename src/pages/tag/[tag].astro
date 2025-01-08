@@ -30,7 +30,7 @@ const pageTitle = `Tag > ${tag} `;
         <ul>
           {fillterdPosts.map((post: any) => (
             <li>
-              <a href={`/blog/${post.slug}`}>{post.title}</a>
+              <a href={`/blog/${post.id}`}>{post.title}</a>
             </li>
           ))}
         </ul>
