@@ -3,27 +3,26 @@ import { GET } from "../api/tags";
 
 import BaseLayout from "../../layout/BaseLayout.astro";
 
-// let tags = [];
+let tags = [];
 
-// try {
-//   // const response = await fetch(`${Astro.url.origin}/api/tags`);
-//   const response = await GET();
+try {
+  const response = await GET();
 
-//   if (!response.ok) {
-//     throw new Error(`Failed to fetch posts: ${response.status}`);
-//   }
+  if (!response.ok) {
+    throw new Error(`Failed to fetch posts: ${response.status}`);
+  }
 
-//   const data = await response.json();
-//   tags = data.tags;
-// } catch (error) {
-//   console.error(error);
-// }
+  const data = await response.json();
+  tags = data.tags;
+} catch (error) {
+  console.error(error);
+}
 
 const pageTitle: string = "Tags";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-  <!-- <div class="tag-wrapper">
+  <div class="tag-wrapper">
     {
       tags.map((tag: any) => (
         <p class="tag">
@@ -31,7 +30,7 @@ const pageTitle: string = "Tags";
         </p>
       ))
     }
-  </div> -->
+  </div>
 </BaseLayout>
 
 <style>
@@ -46,7 +45,6 @@ const pageTitle: string = "Tags";
   }
 
   .tag {
-    /* border: 1px solid #a1a1a1; */
     border-radius: 8px;
     padding: 8px 12px;
     font-size: 16px;
