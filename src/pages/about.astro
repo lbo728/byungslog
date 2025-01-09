@@ -1,16 +1,14 @@
 ---
 import BaseLayout from "../layout/BaseLayout.astro";
+import socialLinks from "../data/socialLinks.ts";
 ---
 
 <BaseLayout>
   <p>프로덕트 디자인을 하다 현재는 개발을 하고 있습니다.</p>
   <p>개발과 디자인, 비즈니스, 글쓰기에 대한 글을 쓰고 있어요.</p>
-  <a href="https://www.linkedin.com/in/byungwoo-lee-98a253200/" target="_blank"
-    >링크드인</a
-  >
+  <a href={socialLinks.linkedin} target="_blank"> 링크드인</a>
   <span>|</span>
-  <a href="https://www.threads.net/@byungsker_letter " target="_blank">스레드</a
-  >
+  <a href={socialLinks.threads} target="_blank">스레드</a>
   <span>|</span>
-  <a href="https://x.com/byungsker" target="_blank">X</a>
+  <a href={socialLinks.x} target="_blank">X</a>
 </BaseLayout>
