@@ -1,0 +1,36 @@
+---
+interface Props {
+  isVisible: boolean;
+}
+
+const { isVisible } = Astro.props;
+---
+
+{
+  isVisible && (
+    <div class="w-dvw h-dvh bg-black/20 absolute z-10 flex justify-center items-center">
+      <div
+        id="loginModal"
+        class="flex flex-col bg-blue-500 w-fit z-20 p-6 rounded-lg"
+      >
+        <h2 class="text-center">로그인 해주세요!</h2>
+        <form
+          action="/api/auth/signin"
+          method="post"
+          class="flex flex-col gap-2"
+        >
+          <label for="email">Email</label>
+          <input type="email" name="email" id="email" class="text-white" />
+          <label for="password">Password</label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            class="text-white"
+          />
+          <button type="submit">Login</button>
+        </form>
+      </div>
+    </div>
+  )
+}

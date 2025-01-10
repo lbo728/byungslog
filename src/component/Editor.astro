@@ -1,0 +1,57 @@
+---
+interface Props {
+  savedTitle?: string;
+  savedContent?: string;
+  savedTags?: string[];
+}
+
+const { savedTitle, savedContent, savedTags = [] } = Astro.props;
+---
+
+<div class="editor">
+  <div class="form">
+    <input
+      id="input"
+      class="title"
+      placeholder="제목을 입력해주세요"
+      value={savedTitle}
+    />
+    <div class="tag-wrapper">
+      <input id="tags-input" class="input" placeholder="태그를 입력해주세요" />
+      {
+        savedTags.map((tag) => (
+          <div class="tag">
+            {tag}
+            <img src="/icon-x-mono.svg" alt="delete icon" />
+          </div>
+        ))
+      }
+    </div>
+
+    <textarea id="textarea" placeholder="이제 이야기를 시작하세요"
+      >{savedContent}</textarea
+    >
+
+    <div class="button-nav">
+      <div class="btn-previous">
+        <img src="/icon-arrow-back-dark.svg" alt="left icon" />
+        <span>나가기</span>
+      </div>
+      <div class="btn-wrapper">
+        <div class="btn-sub">임시 저장</div>
+        <div id="uploadButton" class="btn-primary">업로드</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="preview">
+    <h1 id="title"></h1>
+    <div id="result"></div>
+  </div>
+</div>
+
+<script>
+  import { handleEditorInit } from "../utils/editorHandlers";
+
+  handleEditorInit();
+</script>
