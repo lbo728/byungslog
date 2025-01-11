@@ -9,14 +9,13 @@ const {
   data: { user },
 } = await supabase.auth.getUser();
 
-// Load saved draft data from localStorage on the server side
-const savedTitle = ""; // This would need client-side JS to load from localStorage
+const savedTitle = "";
 const savedContent = "";
 const savedTags: string[] = [];
 ---
 
 <AdminLayout title="Admin">
-  <LoginModal isVisible={!user} />
+  <!-- <LoginModal isVisible={!user} /> -->
   <Editor
     savedTitle={savedTitle}
     savedContent={savedContent}
