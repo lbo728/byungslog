@@ -2,58 +2,38 @@
 import { GET } from "./api/posts";
 
 import type { Post } from "../types/Post";
-//
+
 import BaseLayout from "../layout/BaseLayout.astro";
-//
-import { formatDate } from "../utils/date";
-import { calculateReadingTime } from "../utils/readingTime";
+
+import PostList from "@component/PostList.astro";
+import Loading from "@component/Loading.astro";
 
 export const prerender = false;
 
 let posts: Post[] = [];
+let errorMessage: string | null = null;
 
-// try {
-//   const response = await GET();
+try {
+  const response = await GET();
 
-//   if (!response.ok) {
-//     throw new Error(`Failed to fetch posts: ${response.status}`);
-//   }
+  if (!response.ok) {
+    throw new Error(`Failed to fetch posts: ${response.status}`);
+  }
 
-//   const data = await response.json();
-//   posts = data.posts;
-// } catch (error) {
-//   console.error(error);
-// } finally {
-// }
+  const data = await response.json();
+  posts = data.posts as Post[];
+} catch (error) {
+  console.error(error);
+  errorMessage = "Failed to load posts. Please try again later.";
+}
 ---
 
 <BaseLayout>
   <div class="total">Total: {posts.length}</div>
   <div class="post-list">
-    {
-      posts.map((post) => (
-        <a
-          href={`/blog/${post.slug}`}
-          data-astro-prefetch="load"
-          class="post-item"
-        >
-          <div class="thumb" />
-          <div class="title">{post.title}</div>
-          <div class="tags">
-            {post.tags.map((tag: string) => (
-              <div class="tag">{tag}</div>
-            ))}
-          </div>
-          <div class="time-info">
-            <div class="created-at">{formatDate(post.created_at)}</div>
-            <div class="bullet">•</div>
-            <div class="reading-time">
-              {calculateReadingTime(post.content)} min read
-            </div>
-          </div>
-        </a>
-      ))
-    }
+    <PostList server:defer {posts}>
+      <Loading slot="fallback" />
+    </PostList>
   </div>
 </BaseLayout>
 
