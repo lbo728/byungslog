@@ -4,11 +4,62 @@ import socialLinks from "../data/socialLinks.ts";
 ---
 
 <BaseLayout>
-  <p>프로덕트 디자인을 하다 현재는 개발을 하고 있습니다.</p>
-  <p>개발과 디자인, 비즈니스, 글쓰기에 대한 글을 쓰고 있어요.</p>
-  <a href={socialLinks.linkedin} target="_blank"> 링크드인</a>
-  <span>|</span>
-  <a href={socialLinks.threads} target="_blank">스레드</a>
-  <span>|</span>
-  <a href={socialLinks.x} target="_blank">X</a>
+  <div class="content">
+    <div class="paragraph">
+      <div class="desc">
+        프로덕트 디자인으로 커리어를 시작하여 현재는 프론트엔드 개발을 하고
+        있습니다.
+
+        <br />
+        <b>제품 중심 개발</b>을 지향하고, 매일 <b>짧은 글쓰기</b>를 하고
+        있습니다.
+        <br />
+        개발과 디자인, 비즈니스, 글쓰기에 대한 글을 쓰고 있어요.
+        <br />
+      </div>
+    </div>
+
+    <div class="paragraph">
+      <div class="sub-title">활동</div>
+      <div class="desc">
+        <li>
+          TeoConf3 - 주니어 개발자의, 200일간 혼자만의 짧은 글쓰기로 성장하기
+        </li>
+      </div>
+    </div>
+    <div class="paragraph">
+      <div class="sub-title">Contact</div>
+      <div class="sns">
+        <a href={socialLinks.linkedin} target="_blank"> 링크드인</a>
+        <span>|</span>
+        <a href={socialLinks.threads} target="_blank">스레드</a>
+        <span>|</span>
+        <a href={socialLinks.x} target="_blank">X</a>
+      </div>
+    </div>
+  </div>
 </BaseLayout>
+
+<style>
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    .paragraph {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .sub-title {
+        font-size: 24px;
+        font-weight: 600;
+      }
+
+      .desc {
+        font-size: 16px;
+        line-height: 200%;
+      }
+    }
+  }
+</style>
