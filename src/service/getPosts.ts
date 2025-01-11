@@ -8,8 +8,8 @@ export default async function getPosts() {
 
   if (error) {
     console.error("Error fetching posts:", error);
-    return [];
+    throw new Error("Failed to fetch posts");
   }
 
-  return data;
+  return data || [];
 }
