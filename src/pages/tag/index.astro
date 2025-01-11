@@ -3,7 +3,11 @@ import { GET } from "../api/tags";
 
 import BaseLayout from "../../layout/BaseLayout.astro";
 
+import Tags from "../../component/Tags.astro";
+import Loading from "../../component/Loading.astro";
+
 let tags = [];
+let errorMessage: string | null = null;
 
 try {
   const response = await GET();
@@ -16,6 +20,7 @@ try {
   tags = data.tags;
 } catch (error) {
   console.error(error);
+  errorMessage = "Failed to load posts. Please try again later.";
 }
 
 const pageTitle: string = "Tags";
@@ -23,31 +28,10 @@ const pageTitle: string = "Tags";
 
 <BaseLayout pageTitle={pageTitle}>
   <div class="tag-wrapper">
-    {
-      tags.map((tag: any) => (
-        <p class="tag">
-          <a href={`/tag/${tag}`}>{tag}</a>
-        </p>
-      ))
-    }
+    <Tags server:defer {tags}>
+      <Loading slot="fallback" />
+    </Tags>
   </div>
 </BaseLayout>
 
-<style>
-  a {
-    color: #00539f;
-  }
-
-  .tag-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .tag {
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 16px;
-    background-color: #f8fcfd;
-  }
-</style>
+<style></style>
