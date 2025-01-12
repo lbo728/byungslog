@@ -6,22 +6,43 @@ interface Props {
 const { tags } = Astro.props;
 ---
 
-{
-  tags.length > 0 ? (
-    <>
-      {tags.map((tag: any) => (
-        <p class="tag">
-          <a href={`/tag/${tag}`}>{tag}</a>
-        </p>
-      ))}
-    </>
-  ) : (
-    <div>No posts available.</div>
-  )
-}
+<div class="tag-wrapper">
+  {
+    tags.length > 0 ? (
+      <>
+        {tags.map((tag: any) => (
+          <p class="tag">
+            <a href={`/tag/${tag}`} data-astro-prefetch>
+              {tag}
+            </a>
+          </p>
+        ))}
+      </>
+    ) : (
+      <div>No posts available.</div>
+    )
+  }
+</div>
 
 <style>
-  a {
+  .tag-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .tag {
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 16px;
+      background-color: #f8fcfd;
+
+      a {
+        color: #00539f;
+      }
+    }
+  }
+
+  /* a {
     color: #00539f;
   }
 
@@ -36,5 +57,5 @@ const { tags } = Astro.props;
     padding: 8px 12px;
     font-size: 16px;
     background-color: #f8fcfd;
-  }
+  } */
 </style>

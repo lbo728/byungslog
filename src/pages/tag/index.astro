@@ -27,11 +27,7 @@ const pageTitle: string = "Tags";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-  <div class="tag-wrapper">
-    <Tags server:defer {tags}>
-      <Loading slot="fallback" />
-    </Tags>
-  </div>
+  <Tags server:defer {tags}>
+    <Loading slot="fallback" />
+  </Tags>
 </BaseLayout>
-
-<style></style>
