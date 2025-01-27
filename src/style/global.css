@@ -110,6 +110,39 @@ button {
   cursor: pointer;
 }
 
+pre {
+  background: #282c34;
+  color: #abb2bf;
+  padding: 1rem;
+  border-radius: 5px;
+  overflow-x: auto;
+
+  code {
+    font-family: "Fira Code", monospace;
+    font-size: 14px;
+    background: initial;
+    color: white;
+  }
+
+  .keyword {
+    color: #c678dd;
+    font-weight: bold;
+  }
+
+  .string {
+    color: #98c379;
+  }
+
+  .number {
+    color: #d19a66;
+  }
+
+  .comment {
+    color: #5c6370;
+    font-style: italic;
+  }
+}
+
 code {
   line-height: normal;
   background: rgba(135, 131, 120, 0.15);
