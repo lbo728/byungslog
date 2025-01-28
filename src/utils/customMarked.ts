@@ -22,6 +22,7 @@ export interface Token {
   lang?: string;
   url?: string;
   children?: Token[];
+  ordered?: boolean;
 }
 
 export interface ParserOptions {
@@ -83,7 +84,10 @@ export class MarkdownParser {
           continue;
         }
 
-        if (line.match(/^[*-+]\s/) || line.match(/^\d+\.\s/)) {
+        if (
+          line.trim().match(/^[-*+]\s+.+/) ||
+          line.trim().match(/^\d+\.\s+.+/)
+        ) {
           const list = this.parseList(lines, i);
           tokens.push(list.token);
           i = list.newIndex;
@@ -199,6 +203,7 @@ export class MarkdownParser {
 
     return tokens;
   }
+
   private parseHeader(line: string): Token {
     const match = line.match(/^(#{1,6})(\s+(.+))?$/);
     if (!match) {
@@ -280,28 +285,80 @@ export class MarkdownParser {
       newIndex: i,
     };
   }
-
   private parseList(
     lines: string[],
     startIndex: number,
   ): { token: Token; newIndex: number } {
     const items: Token[] = [];
     let i = startIndex;
-    const isOrdered = lines[i].match(/^\d+\.\s/) !== null;
-    const pattern = isOrdered ? /^\d+\.\s/ : /^[*-+]\s/;
+    let currentIndent = 0;
+    const listStack: Token[][] = [items];
 
-    while (
-      i < lines.length &&
-      (lines[i].match(pattern) || lines[i].trim() === "")
-    ) {
-      if (lines[i].trim() !== "") {
-        const content = lines[i].replace(pattern, "");
-        items.push({
-          type: "list_item",
-          raw: lines[i],
-          children: this.parseInline(content),
-        });
+    const firstLine = lines[startIndex].trim();
+    const isOrderedList = /^\d+\.\s/.test(firstLine);
+
+    while (i < lines.length) {
+      const line = lines[i];
+      const indentMatch = line.match(/^(\s*)/);
+      const indent = indentMatch ? indentMatch[1].length : 0;
+
+      const isOrderedItem = /^\d+\.\s+(.+)$/.test(line.trim());
+      const isUnorderedItem = /^[-*+]\s+(.+)$/.test(line.trim());
+
+      const isValidListItem = isOrderedList ? isOrderedItem : isUnorderedItem;
+      const listItemMatch = line
+        .trim()
+        .match(isOrderedList ? /^(\d+\.)\s+(.+)$/ : /^([-*+])\s+(.+)$/);
+
+      if (!listItemMatch || !isValidListItem) {
+        if (indent > currentIndent && line.trim()) {
+          const currentList = listStack[listStack.length - 1];
+          if (currentList.length > 0) {
+            const lastItem = currentList[currentList.length - 1];
+            if (lastItem.text) {
+              lastItem.text += "\n" + line.trim();
+              if (lastItem.children) {
+                lastItem.children.push({
+                  type: "text",
+                  raw: line.trim(),
+                  text: line.trim(),
+                });
+              }
+            }
+          }
+          i++;
+          continue;
+        }
+        break;
       }
+
+      const [, marker, content] = listItemMatch;
+
+      if (indent > currentIndent) {
+        const newList: Token[] = [];
+        const parentList = listStack[listStack.length - 1];
+        if (parentList.length > 0) {
+          const lastItem = parentList[parentList.length - 1];
+          lastItem.items = newList;
+        }
+        listStack.push(newList);
+        currentIndent = indent;
+      } else if (indent < currentIndent) {
+        while (indent < currentIndent && listStack.length > 1) {
+          listStack.pop();
+          currentIndent -= 2;
+        }
+      }
+
+      const currentList = listStack[listStack.length - 1];
+      currentList.push({
+        type: "list_item",
+        raw: line,
+        text: content,
+        ordered: isOrderedList,
+        children: this.parseInline(content),
+      });
+
       i++;
     }
 
@@ -309,14 +366,67 @@ export class MarkdownParser {
       token: {
         type: "list",
         raw: lines.slice(startIndex, i).join("\n"),
-        items,
+        ordered: isOrderedList,
+        items: items,
       },
       newIndex: i - 1,
     };
   }
 
   private tokensToHtml(tokens: Token[]): string {
-    return tokens
+    const styles = `
+      <style>
+        ul {
+          list-style-type: disc;
+          padding-left: 20px;
+          display: block;
+          margin-block-start: 1em;
+          margin-block-end: 1em;
+          margin-inline-start: 0px;
+          margin-inline-end: 0px;
+          padding-inline-start: 40px;
+          unicode-bidi: isolate;
+        }
+        
+        ol {
+          list-style-type: decimal;
+          padding-left: 20px;
+          display: block;
+          margin-block-start: 1em;
+          margin-block-end: 1em;
+          margin-inline-start: 0px;
+          margin-inline-end: 0px;
+          padding-inline-start: 40px;
+          unicode-bidi: isolate;
+        }
+
+        ul ul {
+          list-style-type: circle;
+        }
+        
+        ul ul ul {
+          list-style-type: square;
+        }
+        
+        ol ol {
+          list-style-type: lower-alpha;
+        }
+        
+        ol ol ol {
+          list-style-type: lower-roman;
+        }
+
+        .token.keyword { color: #569cd6; }
+          .token.string { color: #ce9178; }
+          .token.comment { color: #6a9955; }
+          .token.number { color: #b5cea8; }
+          .token.boolean { color: #569cd6; }
+          .token.type { color: #4ec9b0; }
+          .token.class { color: #4ec9b0; }
+      </style>
+    `;
+
+    const html = tokens
       .map((token) => {
         switch (token.type) {
           case "header":
@@ -324,6 +434,7 @@ export class MarkdownParser {
               ? ` id="${this.slugify(token.text || "")}"`
               : "";
             return `<h${token.depth}${id}>${this.renderChildren(token.children)}</h${token.depth}>`;
+
           case "code_block":
             const highlighted = this.syntaxHighlighter.highlight(
               token.text || "",
@@ -331,15 +442,6 @@ export class MarkdownParser {
             );
             return `
             <pre><code class="language-${token.lang || ""}">${highlighted}</code></pre>
-            <style>
-              .token.keyword { color: #569cd6; }
-              .token.string { color: #ce9178; }
-              .token.comment { color: #6a9955; }
-              .token.number { color: #b5cea8; }
-              .token.boolean { color: #569cd6; }
-              .token.type { color: #4ec9b0; }
-              .token.class { color: #4ec9b0; }
-            </style>
           `;
 
           case "paragraph":
@@ -348,11 +450,21 @@ export class MarkdownParser {
           case "blockquote":
             return `<blockquote>${this.tokensToHtml(token.children || [])}</blockquote>`;
 
-          case "list":
-            const tag = token.items?.[0]?.raw.match(/^\d+\.\s/) ? "ol" : "ul";
-            return `<${tag}>${token.items
-              ?.map((item) => `<li>${this.renderChildren(item.children)}</li>`)
-              .join("")}</${tag}>`;
+          case "list": {
+            const tag = token.ordered ? "ol" : "ul";
+            const renderListItems = (items: Token[] = []): string => {
+              return items
+                .map((item) => {
+                  const itemContent = this.renderChildren(item.children);
+                  const nestedList = item.items
+                    ? `\n${renderListItems(item.items)}\n`
+                    : "";
+                  return `<li>${itemContent}${nestedList}</li>`;
+                })
+                .join("\n");
+            };
+            return `<${tag}>\n${renderListItems(token.items)}\n</${tag}>`;
+          }
 
           case "bold":
             return `<strong>${this.escapeHtml(token.text || "")}</strong>`;
@@ -374,6 +486,8 @@ export class MarkdownParser {
         }
       })
       .join("\n");
+
+    return styles + html;
   }
 
   private renderChildren(children?: Token[]): string {
