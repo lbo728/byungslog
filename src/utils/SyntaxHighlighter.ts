@@ -15,16 +15,25 @@ export class SyntaxHighlighter {
       name: "javascript",
       rules: [
         {
-          pattern:
-            /\b(function|class|extends|new|this|super|return|if|else|for|while|do|switch|case|break|continue|try|catch|throw|async|await|import|export|default|const|let|var)\b/g,
-          token: "keyword",
-        },
-        {
           pattern: /'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|`(?:[^`\\]|\\.)*`/g,
           token: "string",
         },
         { pattern: /\/\/.*$|\/\*[\s\S]*?\*\//gm, token: "comment" },
+        {
+          pattern:
+            /\b(function|class|extends|new|this|super|return|if|else|for|while|do|switch|case|break|continue|try|catch|throw|async|await|import|export|default|const|let|var)\b/g,
+          token: "keyword",
+        },
         { pattern: /\b\d+\.?\d*\b/g, token: "number" },
+
+        {
+          pattern: /[{}[\]();,.]/g,
+          token: "punctuation",
+        },
+        {
+          pattern: /\b[a-zA-Z_$][0-9a-zA-Z_$]*(?=\()/g,
+          token: "function",
+        },
         { pattern: /\b(true|false)\b/g, token: "boolean" },
       ],
     });
@@ -33,16 +42,24 @@ export class SyntaxHighlighter {
       name: "javascript",
       rules: [
         {
-          pattern:
-            /\b(function|class|extends|new|this|super|return|if|else|for|while|do|switch|case|break|continue|try|catch|throw|async|await|import|export|default|const|let|var)\b/g,
-          token: "keyword",
-        },
-        {
           pattern: /'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|`(?:[^`\\]|\\.)*`/g,
           token: "string",
         },
         { pattern: /\/\/.*$|\/\*[\s\S]*?\*\//gm, token: "comment" },
+        {
+          pattern:
+            /\b(function|class|extends|new|this|super|return|if|else|for|while|do|switch|case|break|continue|try|catch|throw|async|await|import|export|default|const|let|var)\b/g,
+          token: "keyword",
+        },
         { pattern: /\b\d+\.?\d*\b/g, token: "number" },
+        {
+          pattern: /[{}[\]();,.]/g,
+          token: "punctuation",
+        },
+        {
+          pattern: /\b[a-zA-Z_$][0-9a-zA-Z_$]*(?=\()/g,
+          token: "function",
+        },
         { pattern: /\b(true|false)\b/g, token: "boolean" },
       ],
     });

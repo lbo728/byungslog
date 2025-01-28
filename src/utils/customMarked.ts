@@ -1,4 +1,4 @@
-import { SyntaxHighlighter } from "./SyntaxHighlighter";
+import type { SyntaxHighlighter } from "./SyntaxHighlighter";
 
 export type TokenType =
   | "paragraph"
@@ -410,32 +410,16 @@ export class MarkdownParser {
                   color: white;
                   line-height: 1.5;
                 }
-
-                .keyword {
-                  color: #c678dd;
-                  font-weight: bold;
-                }
-
-                .string {
-                  color: #98c379;
-                }
-
-                .number {
-                  color: #d19a66;
-                }
-
-                .comment {
-                  color: #5c6370;
-                  font-style: italic;
-                }
               }
-              .token.keyword { color: #569cd6; }
+              .token.keyword { color: #c678dd; }
+              .token.function { color: #61afef; }
               .token.string { color: #ce9178; }
-              .token.comment { color: #6a9955; }
+              .token.comment { color: #7c858d; }
               .token.number { color: #b5cea8; }
               .token.boolean { color: #569cd6; }
               .token.type { color: #4ec9b0; }
               .token.class { color: #4ec9b0; }
+              .token.punctuation { color: #abb2bf; } 
             </style>
           `;
 
