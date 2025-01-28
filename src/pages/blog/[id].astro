@@ -2,7 +2,6 @@
 import { GET } from "../api/posts/[id]";
 
 import BaseLayout from "../../layout/BaseLayout.astro";
-import { markedReadContent } from "../../utils/marked";
 import PostDetail from "../../component/PostDetail.astro";
 import Loading from "../../component/Loading.astro";
 import { MarkdownParser } from "src/utils/customMarked";
@@ -24,7 +23,6 @@ if (!post) {
 
 const parser = new MarkdownParser();
 
-// const parsedContent = post ? markedReadContent(post.content) : "";
 const parsedContent = post ? parser.parse(post.content) : "";
 ---
 
