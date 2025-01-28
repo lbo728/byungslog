@@ -1,9 +1,11 @@
 ---
-import AdminLayout from "../layout/AdminLayout.astro";
+import { supabase } from "../lib/supabase";
+
+import WrieteLayout from "../layout/WriteLayout.astro";
 import LoginModal from "../component/LoginModal.astro";
 import Editor from "../component/Editor.astro";
+
 import "../style/markdown.css";
-import { supabase } from "../lib/supabase";
 
 const {
   data: { user },
@@ -14,11 +16,11 @@ const savedContent = "";
 const savedTags: string[] = [];
 ---
 
-<AdminLayout title="Admin">
+<WrieteLayout title="Write Post">
   <!-- <LoginModal isVisible={!user} /> -->
   <Editor
     savedTitle={savedTitle}
     savedContent={savedContent}
     savedTags={savedTags}
   />
-</AdminLayout>
+</WrieteLayout>

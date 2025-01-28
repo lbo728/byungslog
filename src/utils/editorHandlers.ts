@@ -6,12 +6,15 @@ import uploadPost from "../service/uploadPost";
 import uploadImage from "../service/uploadImage";
 
 import { markedWriteContent } from "../utils/marked";
+import { MarkdownParser } from "./customMarked";
 
 interface TagList {
   tagList: string[];
 }
 
 export function handleEditorInit() {
+  const marked = new MarkdownParser();
+
   const textareaElement = document.getElementById(
     "textarea",
   ) as HTMLTextAreaElement;
@@ -62,7 +65,8 @@ export function handleEditorInit() {
   });
   textareaElement?.addEventListener("keyup", async () => {
     if (resultElement) {
-      await markedWriteContent(textareaElement.value, resultElement);
+      // await markedWriteContent(textareaElement.value, resultElement);
+      resultElement.innerHTML = marked.parse(textareaElement.value);
     }
   });
 
@@ -126,7 +130,8 @@ export function handleEditorInit() {
       titleElement.innerHTML = savedTitle;
     }
     if (savedContent && resultElement) {
-      await markedWriteContent(savedContent, resultElement);
+      // await markedWriteContent(savedContent, resultElement);
+      resultElement.innerHTML = marked.parse(savedContent);
     }
     if (savedTags) {
       tagList = JSON.parse(savedTags);

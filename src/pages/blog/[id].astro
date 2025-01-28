@@ -2,9 +2,9 @@
 import { GET } from "../api/posts/[id]";
 
 import BaseLayout from "../../layout/BaseLayout.astro";
-import { markedReadContent } from "../../utils/marked";
 import PostDetail from "../../component/PostDetail.astro";
 import Loading from "../../component/Loading.astro";
+import { MarkdownParser } from "src/utils/customMarked";
 
 export const prerender = false;
 
@@ -21,7 +21,9 @@ if (!post) {
   throw new Error("Post not found");
 }
 
-const parsedContent = post ? markedReadContent(post.content) : "";
+const parser = new MarkdownParser();
+
+const parsedContent = post ? parser.parse(post.content) : "";
 ---
 
 <BaseLayout>
