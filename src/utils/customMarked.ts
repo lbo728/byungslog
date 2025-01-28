@@ -199,17 +199,30 @@ export class MarkdownParser {
 
     return tokens;
   }
-
   private parseHeader(line: string): Token {
-    const match = line.match(/^(#{1,6})\s+(.+)$/);
-    if (!match) throw new Error("Invalid header format");
+    const match = line.match(/^(#{1,6})(\s+(.+))?$/);
+    if (!match) {
+      return {
+        type: "paragraph",
+        raw: line,
+        children: this.parseInline(line),
+      };
+    }
+
+    if (!match[2]) {
+      return {
+        type: "paragraph",
+        raw: line,
+        children: this.parseInline(line),
+      };
+    }
 
     return {
       type: "header",
       raw: line,
-      text: match[2],
+      text: match[3],
       depth: match[1].length,
-      children: this.parseInline(match[2]),
+      children: this.parseInline(match[3]),
     };
   }
 
