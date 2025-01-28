@@ -1,108 +1,6 @@
-interface SyntaxRule {
-  pattern: RegExp;
-  token: string;
-}
+import { SyntaxHighlighter } from "./SyntaxHighlighter";
 
-interface LanguageDefinition {
-  name: string;
-  rules: SyntaxRule[];
-}
-
-class SyntaxHighlighter {
-  private languages: Map<string, LanguageDefinition> = new Map();
-
-  constructor() {
-    this.registerLanguage("typescript", {
-      name: "typescript",
-      rules: [
-        {
-          pattern:
-            /\b(class|interface|type|enum|extends|implements|public|private|protected|readonly|static|new|this|super|return|if|else|for|while|do|switch|case|break|continue|try|catch|throw|async|await|import|export|from|default|const|let|var)\b/g,
-          token: "keyword",
-        },
-        {
-          pattern: /\b(string|number|boolean|any|void|never|null|undefined)\b/g,
-          token: "type",
-        },
-        {
-          pattern: /'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|`(?:[^`\\]|\\.)*`/g,
-          token: "string",
-        },
-        { pattern: /\/\/.*$|\/\*[\s\S]*?\*\//gm, token: "comment" },
-        { pattern: /\b\d+\.?\d*\b/g, token: "number" },
-        { pattern: /\b(true|false)\b/g, token: "boolean" },
-        { pattern: /[A-Z][a-zA-Z0-9_$]*\b/g, token: "class" },
-      ],
-    });
-
-    this.registerLanguage("javascript", {
-      name: "javascript",
-      rules: [
-        {
-          pattern:
-            /\b(function|class|extends|new|this|super|return|if|else|for|while|do|switch|case|break|continue|try|catch|throw|async|await|import|export|default|const|let|var)\b/g,
-          token: "keyword",
-        },
-        {
-          pattern: /'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|`(?:[^`\\]|\\.)*`/g,
-          token: "string",
-        },
-        { pattern: /\/\/.*$|\/\*[\s\S]*?\*\//gm, token: "comment" },
-        { pattern: /\b\d+\.?\d*\b/g, token: "number" },
-        { pattern: /\b(true|false)\b/g, token: "boolean" },
-      ],
-    });
-
-    this.registerLanguage("python", {
-      name: "python",
-      rules: [
-        {
-          pattern:
-            /\b(def|class|lambda|if|else|elif|for|while|return|try|except|raise|import|from|as|with|pass|break|continue|global|nonlocal)\b/g,
-          token: "keyword",
-        },
-        { pattern: /\b(True|False|None)\b/g, token: "boolean" },
-        {
-          pattern:
-            /'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|'''[\s\S]*?'''|"""[\s\S]*?"""/g,
-          token: "string",
-        },
-        { pattern: /#.*$/gm, token: "comment" },
-        { pattern: /\b\d+\.?\d*\b/g, token: "number" },
-      ],
-    });
-  }
-
-  registerLanguage(name: string, definition: LanguageDefinition) {
-    this.languages.set(name, definition);
-  }
-
-  highlight(code: string, lang: string): string {
-    const language = this.languages.get(lang);
-    if (!language) return this.escapeHtml(code);
-
-    let highlighted = this.escapeHtml(code);
-    for (const rule of language.rules) {
-      highlighted = highlighted.replace(
-        rule.pattern,
-        (match) => `<span class="token ${rule.token}">${match}</span>`,
-      );
-    }
-
-    return highlighted;
-  }
-
-  private escapeHtml(text: string): string {
-    return text
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
-}
-
-type TokenType =
+export type TokenType =
   | "paragraph"
   | "header"
   | "code_block"
@@ -115,7 +13,7 @@ type TokenType =
   | "blockquote"
   | "text";
 
-interface Token {
+export interface Token {
   type: TokenType;
   raw: string;
   text?: string;
@@ -126,14 +24,14 @@ interface Token {
   children?: Token[];
 }
 
-interface ParserOptions {
+export interface ParserOptions {
   gfm?: boolean;
   breaks?: boolean;
   headerIds?: boolean;
   sanitize?: boolean;
 }
 
-class MarkdownParser {
+export class MarkdownParser {
   private options: Required<ParserOptions>;
   private syntaxHighlighter: SyntaxHighlighter;
 
@@ -346,11 +244,6 @@ class MarkdownParser {
     lines: string[],
     startIndex: number,
   ): { token: Token; newIndex: number } {
-    // console.log("Start parsing code block:", {
-    //   startLine: lines[startIndex],
-    //   nextLines: lines.slice(startIndex + 1, startIndex + 5),
-    // });
-
     const content: string[] = [];
     let i = startIndex + 1;
     const lang = lines[startIndex].slice(3).trim();
@@ -359,10 +252,6 @@ class MarkdownParser {
       content.push(lines[i]);
       i++;
     }
-    // console.log("Parsed content:", {
-    //   language: lang,
-    //   content: content.join("\n"),
-    // });
 
     if (i >= lines.length) {
       throw new Error("Unclosed code block");
@@ -422,18 +311,11 @@ class MarkdownParser {
               ? ` id="${this.slugify(token.text || "")}"`
               : "";
             return `<h${token.depth}${id}>${this.renderChildren(token.children)}</h${token.depth}>`;
-
-          // case "code_block":
-          //   return `<pre><code class="language-${token.lang || ""}">${this.escapeHtml(
-          //     token.text || "",
-          //   )}</code></pre>`;
           case "code_block":
             const highlighted = this.syntaxHighlighter.highlight(
               token.text || "",
               token.lang || "",
             );
-            console.log("highlighted:", highlighted);
-            console.log("token.text:", token.text);
             return `
             <pre><code class="language-${token.lang || ""}">${highlighted}</code></pre>
             <style>
@@ -491,7 +373,7 @@ class MarkdownParser {
       const parsed = new URL(url);
       return parsed.protocol === "javascript:" ? "" : url;
     } catch {
-      return url; // Relative URLs are allowed
+      return url;
     }
   }
 
@@ -512,5 +394,3 @@ class MarkdownParser {
       .replace(/'/g, "&#039;");
   }
 }
-
-export { MarkdownParser, type Token, type TokenType, type ParserOptions };
