@@ -1,4 +1,4 @@
-import { SyntaxHighlighter } from "./SyntaxHighlighter";
+import { SyntaxHighlighter } from "./syntaxHighlighter";
 
 export type TokenType =
   | "paragraph"
