@@ -374,58 +374,6 @@ export class MarkdownParser {
   }
 
   private tokensToHtml(tokens: Token[]): string {
-    const styles = `
-      <style>
-        ul {
-          list-style-type: disc;
-          padding-left: 20px;
-          display: block;
-          margin-block-start: 1em;
-          margin-block-end: 1em;
-          margin-inline-start: 0px;
-          margin-inline-end: 0px;
-          padding-inline-start: 40px;
-          unicode-bidi: isolate;
-        }
-        
-        ol {
-          list-style-type: decimal;
-          padding-left: 20px;
-          display: block;
-          margin-block-start: 1em;
-          margin-block-end: 1em;
-          margin-inline-start: 0px;
-          margin-inline-end: 0px;
-          padding-inline-start: 40px;
-          unicode-bidi: isolate;
-        }
-
-        ul ul {
-          list-style-type: circle;
-        }
-        
-        ul ul ul {
-          list-style-type: square;
-        }
-        
-        ol ol {
-          list-style-type: lower-alpha;
-        }
-        
-        ol ol ol {
-          list-style-type: lower-roman;
-        }
-
-        .token.keyword { color: #569cd6; }
-          .token.string { color: #ce9178; }
-          .token.comment { color: #6a9955; }
-          .token.number { color: #b5cea8; }
-          .token.boolean { color: #569cd6; }
-          .token.type { color: #4ec9b0; }
-          .token.class { color: #4ec9b0; }
-      </style>
-    `;
-
     const html = tokens
       .map((token) => {
         switch (token.type) {
@@ -441,7 +389,54 @@ export class MarkdownParser {
               token.lang || "",
             );
             return `
-            <pre><code class="language-${token.lang || ""}">${highlighted}</code></pre>
+            <pre>
+              <code class="language-${token.lang || ""}">${highlighted}</code>
+            </pre>
+            <style>
+              pre {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                background: #282c34;
+                color: #abb2bf;
+                padding: 1rem;
+                border-radius: 5px;
+                overflow-x: auto;
+
+                code {
+                  font-family: "Fira Code", monospace;
+                  font-size: 14px;
+                  background: initial;
+                  color: white;
+                  line-height: 1.5;
+                }
+
+                .keyword {
+                  color: #c678dd;
+                  font-weight: bold;
+                }
+
+                .string {
+                  color: #98c379;
+                }
+
+                .number {
+                  color: #d19a66;
+                }
+
+                .comment {
+                  color: #5c6370;
+                  font-style: italic;
+                }
+              }
+              .token.keyword { color: #569cd6; }
+              .token.string { color: #ce9178; }
+              .token.comment { color: #6a9955; }
+              .token.number { color: #b5cea8; }
+              .token.boolean { color: #569cd6; }
+              .token.type { color: #4ec9b0; }
+              .token.class { color: #4ec9b0; }
+            </style>
           `;
 
           case "paragraph":
@@ -463,7 +458,50 @@ export class MarkdownParser {
                 })
                 .join("\n");
             };
-            return `<${tag}>\n${renderListItems(token.items)}\n</${tag}>`;
+            return `
+              <${tag}>\n${renderListItems(token.items)}\n</${tag}>
+              <style>
+                ul {
+                  list-style-type: disc;
+                  padding-left: 20px;
+                  display: block;
+                  margin-block-start: 1em;
+                  margin-block-end: 1em;
+                  margin-inline-start: 0px;
+                  margin-inline-end: 0px;
+                  padding-inline-start: 40px;
+                  unicode-bidi: isolate;
+                }
+                
+                ol {
+                  list-style-type: decimal;
+                  padding-left: 20px;
+                  display: block;
+                  margin-block-start: 1em;
+                  margin-block-end: 1em;
+                  margin-inline-start: 0px;
+                  margin-inline-end: 0px;
+                  padding-inline-start: 40px;
+                  unicode-bidi: isolate;
+                }
+
+                ul ul {
+                  list-style-type: circle;
+                }
+                
+                ul ul ul {
+                  list-style-type: square;
+                }
+                
+                ol ol {
+                  list-style-type: lower-alpha;
+                }
+                
+                ol ol ol {
+                  list-style-type: lower-roman;
+                }
+              </>
+            `;
           }
 
           case "bold":
@@ -487,7 +525,7 @@ export class MarkdownParser {
       })
       .join("\n");
 
-    return styles + html;
+    return html;
   }
 
   private renderChildren(children?: Token[]): string {
