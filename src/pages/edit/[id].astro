@@ -1,0 +1,32 @@
+---
+import { GET } from "../api/posts/[id]";
+
+import WrieteLayout from "../../layout/WriteLayout.astro";
+// import Editor from "../../component/Editor.tsx";
+
+import "../style/markdown.css";
+import PostUpdateEditor from "@component/PostUpdateEditor.astro";
+
+export const prerender = false;
+
+const response = await GET(Astro);
+const { post } = await response.json();
+
+if (!response.ok) {
+  const errorText = await response.text();
+  console.error("Fetch error:", errorText);
+  throw new Error("Failed to fetch post");
+}
+
+if (!post) {
+  throw new Error("Post not found");
+}
+---
+
+<WrieteLayout title="Edit Post">
+  <PostUpdateEditor
+    savedTitle={post.title}
+    savedContent={post.content}
+    savedTags={post.tags}
+  />
+</WrieteLayout>

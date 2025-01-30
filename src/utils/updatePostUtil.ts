@@ -2,8 +2,8 @@ import { prefetch } from "astro:prefetch";
 
 import { supabase } from "../lib/supabase";
 
-import uploadPost from "../service/uploadPost";
 import uploadImage from "../service/uploadImage";
+import updatePost from "../service/updatePost";
 
 import { Markyfy } from "markyfy";
 
@@ -13,7 +13,7 @@ interface TagList {
   tagList: string[];
 }
 
-export function handleEditorInit() {
+export function updatePostUtil() {
   const textareaElement = document.getElementById(
     "textarea",
   ) as HTMLTextAreaElement;
@@ -197,7 +197,7 @@ async function handleUploadClick(
   }
 
   if (confirm("이 내용으로 업로드 하시겠어요?")) {
-    const result = await uploadPost(title, content, tags);
+    const result = await updatePost(id, title, content, tags);
     if (result.success && result.id) {
       clearInputs(inputElement, textareaElement);
       const id = result.id;

@@ -19,17 +19,26 @@ const { post, parsedContent } = Astro.props;
     <div class="tags">
       {post.tags.map((tag: string) => <div class="tag">{tag}</div>)}
     </div>
-    <div class="time-info">
-      <div class="created-at">{formatDate(post.created_at)}</div>
-      <div class="bullet">•</div>
-      <div class="reading-time">
-        {calculateReadingTime(post.content)} min read
+    <div class="info-container">
+      <div class="time-info">
+        <div class="created-at">{formatDate(post.created_at)}</div>
+        <div class="bullet">•</div>
+        <div class="reading-time">
+          {calculateReadingTime(post.content)} min read
+        </div>
+      </div>
+
+      <div class="btn-text">
+        <a href={`/edit/${post.id}`} target="_self">
+          <img src="/icon-edit.svg" alt="edit" />
+          <span>수정하기</span>
+        </a>
       </div>
     </div>
   </div>
-
-  <div class="content" set:html={parsedContent} />
 </div>
+
+<div class="content" set:html={parsedContent} />
 
 <style>
   .post-detail {
@@ -67,12 +76,37 @@ const { post, parsedContent } = Astro.props;
       }
     }
 
-    .time-info {
+    .info-container {
       display: flex;
       flex-direction: row;
-      gap: 8px;
-      .created-at {
-        font-style: italic;
+      justify-content: space-between;
+      align-items: center;
+      .time-info {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+        .created-at {
+          font-style: italic;
+        }
+      }
+      .btn-text {
+        cursor: pointer;
+
+        a {
+          display: flex;
+          flex-direction: row;
+          gap: 4px;
+          text-decoration: none;
+
+          span {
+            color: white;
+
+            margin-top: 4px;
+            &:hover {
+              color: #ededed;
+            }
+          }
+        }
       }
     }
   }

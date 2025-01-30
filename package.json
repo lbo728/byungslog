@@ -22,11 +22,13 @@
     "highlight.js": "^11.10.0",
     "marked": "^14.1.2",
     "marked-highlight": "^2.1.4",
+    "markyfy": "file:../markyfy/markyfy-0.0.3.tgz",
     "preact": "^10.20.1",
     "prettier-plugin-astro": "^0.13.0",
     "react-lottie": "^1.2.10",
     "tailwindcss": "^3.4.12",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.3",
+    "uxtrack": "file:../uxtrack/uxtrack-0.0.2.tgz"
   },
   "devDependencies": {
     "prettier": "^3.4.2",

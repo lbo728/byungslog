@@ -6,6 +6,8 @@ interface Props {
 }
 
 const { savedTitle, savedContent, savedTags = [] } = Astro.props;
+
+console.log("savedContent:", savedContent);
 ---
 
 <div class="editor">
@@ -16,6 +18,7 @@ const { savedTitle, savedContent, savedTags = [] } = Astro.props;
       placeholder="제목을 입력해주세요"
       value={savedTitle}
     />
+
     <div class="tag-wrapper">
       <input id="tags-input" class="input" placeholder="태그를 입력해주세요" />
       {
@@ -28,9 +31,12 @@ const { savedTitle, savedContent, savedTags = [] } = Astro.props;
       }
     </div>
 
-    <textarea id="textarea" placeholder="이제 이야기를 시작하세요"
-      >{savedContent}</textarea
+    <textarea
+      id="textarea"
+      placeholder="이제 이야기를 시작하세요"
+      value={savedContent}
     >
+    </textarea>
 
     <div class="button-nav">
       <div class="btn-previous">
@@ -45,12 +51,13 @@ const { savedTitle, savedContent, savedTags = [] } = Astro.props;
   </div>
 
   <div class="preview">
-    <h1 id="title"></h1>
+    <h1 id="title">{savedTitle}</h1>
     <div id="result"></div>
   </div>
 </div>
 
 <script>
+  // import updatePost from "src/service/updatePost";
   import { handleEditorInit } from "../utils/editorHandlers";
 
   handleEditorInit();
