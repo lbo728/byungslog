@@ -1,7 +1,7 @@
 ---
 import { supabase } from "../lib/supabase";
 
-import WrieteLayout from "../layout/WriteLayout.astro";
+import WriteLayout from "../layout/WriteLayout.astro";
 import LoginModal from "../component/LoginModal.astro";
 import Editor from "../component/Editor.astro";
 
@@ -16,11 +16,11 @@ const savedContent = "";
 const savedTags: string[] = [];
 ---
 
-<WrieteLayout title="Write Post">
-  <!-- <LoginModal isVisible={!user} /> -->
+<WriteLayout title="Write Post">
+  <LoginModal isVisible={!user} />
   <Editor
     savedTitle={savedTitle}
     savedContent={savedContent}
     savedTags={savedTags}
   />
-</WrieteLayout>
+</WriteLayout>

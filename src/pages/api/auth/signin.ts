@@ -4,18 +4,6 @@ import type { APIRoute } from "astro";
 import type { Provider } from "@supabase/supabase-js";
 import { supabase } from "../../../lib/supabase";
 
-// export const GET: APIRoute = async ({ request, redirect }) => {
-//   const url = new URL(request.url);
-//   const code = url.searchParams.get("code");
-//   const provider = url.searchParams.get("provider");
-
-//   if (code) {
-//     return redirect(`/api/auth/callback?code=${code}`);
-//   }
-
-//   return new Response(null, { status: 400 });
-// };
-
 export const POST: APIRoute = async ({ request, cookies, redirect }) => {
   const formData = await request.formData();
   const email = formData.get("email")?.toString();
@@ -62,5 +50,5 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
   cookies.set("sb-refresh-token", refresh_token, {
     path: "/",
   });
-  return redirect("/admin");
+  return redirect("/write");
 };

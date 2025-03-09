@@ -40,6 +40,9 @@ const { savedTitle, savedContent, savedTags = [] } = Astro.props;
       <div class="btn-wrapper">
         <div class="btn-sub">임시 저장</div>
         <div id="uploadButton" class="btn-primary">업로드</div>
+        <form action="/api/auth/signout" method="POST">
+          <button type="submit" id="logout-button">Logout</button>
+        </form>
       </div>
     </div>
   </div>

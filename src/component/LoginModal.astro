@@ -13,6 +13,9 @@ const { isVisible } = Astro.props;
         id="loginModal"
         class="flex flex-col bg-blue-500 w-fit z-20 p-6 rounded-lg"
       >
+        <p>
+          New here? <a href="/register">Create an account</a>
+        </p>
         <h2 class="text-center">로그인 해주세요!</h2>
         <form
           action="/api/auth/signin"
